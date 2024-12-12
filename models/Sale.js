@@ -12,10 +12,10 @@ export class Sale {
     #paymentWay;
     #products;
 
-    constructor(client, expirationDate, paymentMethod, paymentWay, products) {
+    constructor(client, expirationDate, paymentMethod, paymentWay, products, issueDate = new Date()) {
         this.#id = -1;
         this.#client = client;
-        this.#issueDate = new Date();
+        this.#issueDate = issueDate;
         this.#expirationDate = expirationDate;
         this.#paymentMethod = paymentMethod;
         this.#paymentWay = paymentWay;
@@ -91,7 +91,8 @@ export class Sale {
             json.expirationDate, 
             json.paymentMethod, 
             json.paymentWay, 
-            json.products
+            json.products,
+            json.issueDate
         )
         newSale.#id = json.id;
 

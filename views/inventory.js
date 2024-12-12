@@ -2,7 +2,7 @@
 export function renderInventory() {
     return `
         <section class="inventory-section">
-            <h2>Gestión de Inventario</h2>
+            <h2 class="clientview-title">Gestión de Inventario</h2>
 
             <div id="productModal">
                     

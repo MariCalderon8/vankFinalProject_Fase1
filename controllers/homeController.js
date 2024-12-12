@@ -4,6 +4,7 @@ import { renderHome } from "../views/home.js";
 import { renderHomeUser } from "../views/homeUser.js";
 import { GraphicsService } from "../services/GraphicsService.js";
 import { UserController } from "./usersController.js";
+import { PdfService } from "../services/PDFService.js";
 
 export class HomeController {
     
@@ -12,6 +13,7 @@ export class HomeController {
         this.graphicsService = new GraphicsService();
         this.homeButtons = null;
         this.userController = new UserController();
+        this.pdfService = null;
     }
 
     render(){
@@ -20,12 +22,16 @@ export class HomeController {
             console.log('Sin loggear');
         } else {
             this.app.appContent.innerHTML = renderHomeUser();
+            this.renderHomeUserData();
+
+            this.pdfService = new PdfService();            
+            this.renderCharts();
+            this.initEventListenersHomeUser();
+
             console.log('Con log');
 
         }
         this.initEventListeners();
-        this.renderHome();
-        this.renderCharts();
     }
 
     initEventListeners() {
@@ -39,26 +45,32 @@ export class HomeController {
         });
     }
 
-    renderHome(){
+    initEventListenersHomeUser(){
+        const btnDownload = document.getElementById('downloadPdf');
+        const dashboard = document.querySelector('.dashboard');
+        btnDownload.addEventListener('click', () =>{
+            this.pdfService.generatePdf(dashboard, 'Reporte');
+        })
+    }
+
+    renderHomeUserData(){
         console.log('Rendering Home User Logged');
         const user = this.userController.getLoggedUser();
-        const homeInit = document.querySelector('.home-init');
-        
-        homeInit.innerHTML=`
-                <div class="home-welcome">
-                    <h1>¡Bienvenido, ${user.getName()}!</h1>
+        const welcome = document.querySelector('.home-welcome');
+
+        welcome.innerHTML = `
+            <h1>¡Bienvenido, ${user.getName()}!</h1>
                     <p>Gestiona tus ventas, inventarios y usuarios de manera eficiente.</p>
-                </div>
-                
-                <!-- Información de la empresa -->
-                <div class="home-info">
-                    <h2>Información de la Empresa</h2>
-                    <p><strong>Nombre:</strong> ${user.getName()}</p>
-                    <p><strong>ID Empresa:</strong> ${user.getId()}</p>
-                    <p><strong>Teléfono:</strong> ${user.getTel()}</p>
-                    <p><strong>Correo:</strong> ${user.getEmail()}</p>
-                    <p><strong>Dirección:</strong> ${user.getAddress()}</p>
-                </div>
+        `
+
+        const homeInfo = document.querySelector('.home-info');
+        homeInfo.innerHTML = `
+                <h2>Información de la Empresa</h2>
+                <p><strong>Nombre:</strong> ${user.getName()}</p>
+                <p><strong>ID Empresa:</strong> ${user.getId()}</p>
+                <p><strong>Teléfono:</strong> ${user.getTel()}</p>
+                <p><strong>Correo:</strong> ${user.getEmail()}</p>
+                <p><strong>Dirección:</strong> ${user.getAddress()}</p>
         `
     }
 

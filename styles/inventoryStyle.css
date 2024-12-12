@@ -1,4 +1,9 @@
 /* styles/inventoryStyle.css */
+.inventoryview-title{
+    text-align: center;
+    margin: 30px 0px;
+}
+
 .form-inventory-container {
     margin: 0 auto;
     padding: 20px;
@@ -300,11 +305,6 @@
 .badge-success {
     background: #c6f6d5;
     color: #2f855a;
-}
-
-.badge-warning {
-    background: #feebc8;
-    color: #c05621;
 }
 
 /* Animaciones */

@@ -174,8 +174,8 @@ export class InventoryController {
             return;
         }
 
-        if(salePrice < unitPrice){
-            alert('Recuerde que el precio de venta no puede ser menor al precio de unitario');
+        if(parseFloat(salePrice) <= parseFloat(unitPrice)){
+            alert('Recuerde que el precio de venta no puede ser menor o igual al precio de unitario');
             return;
         }
 
@@ -269,8 +269,8 @@ export class InventoryController {
         const unitPrice = document.getElementById('unitPriceProduct-formInventory').value;
         const salePrice = document.getElementById('salePriceProduct-formInventory').value;
 
-        if(salePrice < unitPrice){
-            alert('Recuerde que el precio de venta no puede ser menor al precio de unitario');
+        if(salePrice <= unitPrice){
+            alert('Recuerde que el precio de venta no puede ser menor o igual al precio de unitario');
             return;
         }
 
@@ -321,6 +321,7 @@ export class InventoryController {
         const user = this.userController.getLoggedUser();
         const iaResponse = await this.aiService.generateProductAnalysis(product.getId())
         const modal = document.getElementById('productModal');
+
         modal.innerHTML = `
         <div class="modal-body" id="productModal">
             <div class="modal-container">
@@ -328,7 +329,7 @@ export class InventoryController {
 
                 <div class="modal-header">
                     <h2 class="product-title">Detalles del Producto</h2>
-                    <span class="badge badge-success">Top Vendido</span>
+                    <span class="badge"></span>
                 </div>
 
                 <div class="modal-productDetails">
@@ -373,15 +374,14 @@ export class InventoryController {
                         <div class="stat-value">${product.getProfitMargin()}%</div>
                     </div>
                 </div>
-                <h2>(GRAFICAS PENDIENTES)</h2>
                 <div class="charts-container">
                 
                     <div class="chart-box">
-                        <h3 class="chart-title">Ventas Mensuales (No se qué poner aquí, aiuda)</h3>
+                        <h3 class="chart-title">Ventas Mensuales</h3>
                         <canvas class="chart-canvas" id="barChart"></canvas>
                     </div>
                     <div class="chart-box">
-                        <h3 class="chart-title">Distribución de Ventas</h3>
+                        <h3 class="chart-title">Ganancias totales</h3>
                         <canvas class="chart-canvas" id="pieChart"></canvas>
                     </div>
                 </div>
@@ -402,6 +402,16 @@ export class InventoryController {
             this.closeModal();
         });
         this.createModalCharts(product, user);
+        this.showBadge(product, user);
+    }
+
+    showBadge(product, user){
+        const badgeComponent = document.querySelector('.badge');
+        console.log(user.isBestSellingProduct(product));
+        if(user.isBestSellingProduct(product)){
+            badgeComponent.classList.add('badge-success')
+            badgeComponent.textContent = 'Top ventas'
+        }
     }
 
     createModalCharts(product, user){
@@ -410,17 +420,16 @@ export class InventoryController {
 
         // Datos torta
         const productTotalProfit = user.getProfitPercentByProduct(product.getId());
-        const labelsPie = [`Ganancias del producto (ID:${product.getId()})`, "Ganancia total"]
-        const dataPie = [productTotalProfit, (100 - productTotalProfit)]
+        const pieLabels = [`Ganancias del producto (ID:${product.getId()})`, "Ganancia total"]
+        const pieData = [productTotalProfit, (100 - productTotalProfit)]
 
         // Datos diagrama de barra
-        const labelsBar = ["Dato 1", "Dato 2", "Dato 3"];
-        const dataBar = [50, 40, 10]
-
+        const barLabels = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        const barData = barLabels.map((label,index) => user.getProductTotalSalesByMonth(index , product.getId()))
         
 
-        this.graphicService.createBarGraphic(barGraphic, 'Ventas por mes', labelsBar, dataBar);
-        this.graphicService.createPieGraphic(pieGraphic, 'Porcentaje ganancias', labelsPie, dataPie);
+        this.graphicService.createBarGraphic(barGraphic, 'Ventas por mes', barLabels, barData);
+        this.graphicService.createPieGraphic(pieGraphic, 'Porcentaje ganancias', pieLabels, pieData);
 
     }
 

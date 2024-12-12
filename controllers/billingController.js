@@ -26,6 +26,7 @@ export class BillingController{
         const today = new Date().toLocaleDateString('en-CA');
         issueDataInput.value = today;
         document.getElementById('fecha-emision').disabled = true;
+        console.log(today);
 
         this.renderTableExistingProducts();
         this.renderTableBillProducts();
@@ -487,7 +488,7 @@ export class BillingController{
     
     handleGeneratePDF(sale, openInNewWindow = false) {
         const pdfContent = this.pdfService.generateBillHtmlFormat(sale);
-        this.pdfService.generatePdf(pdfContent, sale, openInNewWindow,);
+        this.pdfService.generatePdfBill(pdfContent, sale, openInNewWindow);
     }
 
     clearFields() {
@@ -507,7 +508,7 @@ export class BillingController{
 
         // Reiniciar fecha de emisión
         const issueDataInput = document.getElementById('fecha-emision');
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toLocaleDateString('en-CA');
         issueDataInput.value = today;
     }
 }

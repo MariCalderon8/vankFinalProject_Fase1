@@ -1,4 +1,6 @@
 import { UserController } from "../controllers/usersController.js";
+const { jsPDF } = window.jspdf;
+
 
 export class PdfService {
 
@@ -183,21 +185,32 @@ export class PdfService {
         return billHtmlContent;
     }
 
-    generatePdf(pdfContent, sale, openInNewWindow = false) {
-        console.log(openInNewWindow);
-        const { jsPDF } = window.jspdf;
-        const user = this.userController.getLoggedUser();
+    generatePdfBill(pdfContent, sale, openInNewWindow = false){
+        console.log('ENTRO AL MÉTODO DE FACTURA');
         const content = document.createElement('div');
-
         content.innerHTML = pdfContent;
         document.body.appendChild(content);
+        const user = this.userController.getLoggedUser();
+        const fileName = `Factura_${sale.getId()}-${user.getName()}`;
 
+        try{
+            this.generatePdf(content, fileName, openInNewWindow);
+
+        }catch(error){
+            console.error('Hubo un error generando pdf');
+        }finally{
+            document.body.removeChild(content);
+        }
+
+    }
+
+    generatePdf(component, fileName, openInNewWindow = false) {
+        
         // Definir márgenes
         const margin = 2; // Márgenes en mm
         const pageWidth = 210; // Ancho de A4 en mm
-        const pageHeight = 297; // Alto de A4 en mm
 
-        html2canvas(content, {
+        html2canvas(component, {
             scale: 2,
             useCORS: true,
             logging: false,
@@ -216,33 +229,9 @@ export class PdfService {
             const x = margin;
             const y = margin;
 
-            if (imgHeight > pageHeight - 2 * margin) {
-                // Si la altura de la imagen excede la página con márgenes, ajustar altura y dividir en páginas
-                const ratio = (pageHeight - 2 * margin) / imgHeight;
-                const scaledCanvasHeight = canvas.height * ratio;
-
-                let currentHeight = 0;
-
-                while (currentHeight < canvas.height) {
-                    const subCanvas = document.createElement('canvas');
-                    subCanvas.width = canvas.width;
-                    subCanvas.height = Math.min(canvas.height - currentHeight, scaledCanvasHeight / ratio);
-
-                    const ctx = subCanvas.getContext('2d');
-                    ctx.drawImage(canvas, 0, -currentHeight, canvas.width, canvas.height);
-
-                    const imgData = subCanvas.toDataURL('image/png');
-                    pdf.addImage(imgData, 'PNG', x, y, imgWidth, (subCanvas.height * imgWidth) / subCanvas.width);
-
-                    currentHeight += subCanvas.height;
-
-                    if (currentHeight < canvas.height) pdf.addPage(); // Agregar nueva página si hay más contenido
-                }
-            } else {
-                // Si la imagen cabe en una sola página
-                const imgData = canvas.toDataURL('image/png');
-                pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-            }
+            // Si la imagen cabe en una sola página
+            const imgData = canvas.toDataURL('image/png');
+            pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
 
             if (openInNewWindow) {
                 // Abrir PDF en una nueva ventana
@@ -252,13 +241,11 @@ export class PdfService {
             } else {
                 // Descargar PDF
                 console.log('Descargar');
-                pdf.save(`Factura_${sale.getId()}-${user.getName()}.pdf`);
+                pdf.save(`${fileName}.pdf`);
             }
 
-            document.body.removeChild(content);
         }).catch((error) => {
             console.error('Error generating PDF:', error);
-            document.body.removeChild(content);
         });
 
 

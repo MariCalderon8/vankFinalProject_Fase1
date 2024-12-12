@@ -72,20 +72,22 @@ export class GraphicsService {
         });
     }
 
-    createLineGraphic(component, graphicTitle, labels, data, colors = []){
-        const generatedData = this.#generateData(graphicTitle, labels, data, colors);
+    createLineGraphic(component, graphicTitle, labels, data, colors = []) {
+        let generatedData = this.#generateData(graphicTitle, labels, data, colors);
+        generatedData.datasets[0].tension = 0.1;
+        generatedData.datasets[0].fill = true;
+        generatedData.datasets[0].borderWidth = 3;
         return new Chart(component, {
             type: 'line',
             data: generatedData,
             options: {
-              indexAxis: 'y',
-              scales: {
-                x: {
-                  beginAtZero: true
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
                 }
-              }
             }
-          });
+        });
     }
 
 }

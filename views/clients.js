@@ -2,7 +2,7 @@
 export function renderClients() {
     return `
     <section class="client-section">
-        <h2>Gestión de Clientes</h2>
+        <h2 class="clientview-title">Gestión de Clientes</h2>
         <div class="form-clients-container">
             <form class="form-client">
                 <h2 class="actionName-clients">Registrar cliente</h2>

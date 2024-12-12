@@ -16,7 +16,7 @@ export function renderUserNavbar() {
             <li><button class="navBtn navBtnSub" id="btnUsers" data-view="users">Usuarios</button></li>
             <li><button class="navBtn navBtnSub" id="btnInventory" data-view="inventory">Inventario</button></li>
             <li><button class="navBtn navBtnSub" id="btnBilling" data-view="billing">Facturación</button></li>
-            <li><button class="navBtn navBtnSub" id="btnReports" data-view="reports">Reportes</button></li>
+            <li><button class="navBtn navBtnSub" id="btnReports" data-view="reports">Reportes IA</button></li>
         </ul>
     </nav>
     `;

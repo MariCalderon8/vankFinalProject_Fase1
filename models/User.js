@@ -3,7 +3,7 @@ import { Product } from "./Product.js";
 import { Client } from "./Client.js";
 import { Sale } from "./Sale.js";
 
-export class User{
+export class User {
     #name;
     #idType;
     #id;
@@ -16,7 +16,7 @@ export class User{
     #saleHistory;
     #clients;
 
-    constructor(name, idType, id, email, password, tel, address){
+    constructor(name, idType, id, email, password, tel, address) {
         this.#name = name;
         this.#idType = idType;
         this.#id = id;
@@ -30,7 +30,7 @@ export class User{
         this.#clients = [];
     }
 
-    
+
     // Método para convertir la instancia a un objeto serializable
     toJSON() {
         return {
@@ -50,16 +50,16 @@ export class User{
 
     static fromJSON(json) {
         const user = new User(
-            json.name, 
-            json.idType, 
-            json.id, 
-            json.email, 
-            json.password, 
-            json.tel, 
+            json.name,
+            json.idType,
+            json.id,
+            json.email,
+            json.password,
+            json.tel,
             json.address,
         );
         user.#billNum = json.billNum;
-        
+
         const inventory = json.inventory || [];
         user.#inventory = inventory.map(product => Product.fromJSONtoProduct(product)); // Convierte todos los objetos del arreglo inventory en instancias de Product
 
@@ -69,7 +69,7 @@ export class User{
 
         const clients = json.clients || [];
         user.#clients = clients.map(client => Client.fromJSONToClient(client));
-        
+
         return user;
     }
 
@@ -161,13 +161,13 @@ export class User{
 
     updateProduct(newProduct) {
         let existingProduct = this.getProductById(newProduct.id);
-        if(existingProduct){
+        if (existingProduct) {
             // ACTUALIZACIÓN DE LOS ATRIBUTOS
-        } 
+        }
     }
 
     deletProduct(id) {
-        const index = this.#inventory.findIndex(product => product.getId() === id); 
+        const index = this.#inventory.findIndex(product => product.getId() === id);
         if (index === -1) {
             console.error(`Producto con ID ${id} no encontrado`);
             return;
@@ -222,8 +222,8 @@ export class User{
 
     // General
 
-    getTotalSales(){
-        return this.#saleHistory.reduce((total, sale) =>{
+    getTotalSales() {
+        return this.#saleHistory.reduce((total, sale) => {
             sale.getProducts().forEach(detail => {
                 total += (detail.amount * detail.product.getSalePrice());
             });
@@ -231,24 +231,24 @@ export class User{
         }, 0);
     }
 
-    getTotalProfit(){
-        const result = this.#saleHistory.reduce((total, sale) =>{
+    getTotalProfit() {
+        const result = this.#saleHistory.reduce((total, sale) => {
             sale.getProducts().forEach(detail => {
                 total += (detail.amount * (detail.product.getSalePrice() - detail.product.getUnitPrice()));
             });
             return total;
         }, 0);
-        console.log();(`Ganancia Total: ${result}`)
+        console.log(); (`Ganancia Total: ${result}`)
         return result
     }
 
 
     // By product
 
-    getSoldUnitsByProduct(idProduct){
-        return this.#saleHistory.reduce((total, sale) =>{
+    getSoldUnitsByProduct(idProduct) {
+        return this.#saleHistory.reduce((total, sale) => {
             sale.getProducts().forEach(detail => {
-                if(detail.product.getId() == idProduct){
+                if (detail.product.getId() == idProduct) {
                     total += detail.amount
                 }
             });
@@ -256,12 +256,12 @@ export class User{
         }, 0);
     }
 
-    getTotalSalesByProduct(idProduct){
-        return this.#saleHistory.reduce((total, sale) =>{
+    getTotalSalesByProduct(idProduct) {
+        return this.#saleHistory.reduce((total, sale) => {
             sale.getProducts().forEach(detail => {
-                if(detail.product.getId() == idProduct){
+                if (detail.product.getId() == idProduct) {
                     total += (detail.amount * detail.product.getSalePrice());
-                    
+
                 }
                 console.log(total);
             });
@@ -269,10 +269,10 @@ export class User{
         }, 0);
     }
 
-    getTotalProfitByProduct(idProduct){
-        let total = this.#saleHistory.reduce((total, sale) =>{
+    getTotalProfitByProduct(idProduct) {
+        let total = this.#saleHistory.reduce((total, sale) => {
             sale.getProducts().forEach(detail => {
-                if(detail.product.getId() == idProduct){
+                if (detail.product.getId() == idProduct) {
                     console.log(detail.product.getSalePrice());
                     console.log(detail.product.getUnitPrice());
                     total += (detail.amount * (detail.product.getSalePrice() - detail.product.getUnitPrice()));
@@ -284,27 +284,60 @@ export class User{
         return total
     }
 
-    getProfitPercentByProduct(idPrduct){
+    getProfitPercentByProduct(idPrduct) {
         let result = (this.getTotalProfitByProduct(idPrduct) * 100 / this.getTotalProfit()).toFixed(2);
         console.log(`Porcentaje: ${result}`);
         return result;
     }
 
-    //GRAFICOS HOME
-    getTotalSalesByMonth(month){
+    isBestSellingProduct(product) {
+        if (this.#saleHistory.length > 0) {
+            let topSale = { product: null, unitsSold: 0 };
+            const productUnits = this.getSoldUnitsByProduct(product.getId());
+            this.#inventory.forEach(currentProduct => {
+                const unitsSold = this.getSoldUnitsByProduct(currentProduct.getId());
+                if (unitsSold > topSale.unitsSold) {
+                    topSale = { product: currentProduct, unitsSold: unitsSold }
+                    console.log(topSale);
+                }
+            })
+
+            return product.getId() == topSale.product.getId() || productUnits == topSale.unitsSold
+
+        }
+        return false;
+    }
+
+    getProductTotalSalesByMonth(month, idProduct) {
         return this.#saleHistory.reduce((total, sale) => {
             const saleDate = new Date(sale.getIssueDate());
-            if(saleDate.getMonth()+1 === month){
-               sale.getProducts().forEach(detail =>{
-                total += detail.amount ;
-               });
+            if (saleDate.getMonth() === month) {
+                sale.getProducts().forEach(detail => {
+                    if(detail.product.getId() == idProduct){
+                        total += detail.amount ;
+                    }
+                });
             }
             return total;
         }, 0);
 
     }
 
-    getDailyProfitsForMonth(month){
+    //GRAFICOS HOME
+    getTotalSalesByMonth(month) {
+        return this.#saleHistory.reduce((total, sale) => {
+            const saleDate = new Date(sale.getIssueDate());
+            if (saleDate.getMonth() + 1 === month) {
+                sale.getProducts().forEach(detail => {
+                    total += detail.amount;
+                });
+            }
+            return total;
+        }, 0);
+
+    }
+
+    getDailyProfitsForMonth(month) {
 
         // Calcular días en el mes
         const daysInMonth = new Date(new Date().getFullYear(), month, 0).getDate();
@@ -313,9 +346,9 @@ export class User{
 
         this.#saleHistory.forEach(sale => {
             const saleDate = new Date(sale.getIssueDate());
-            if(saleDate.getMonth()+1 === month){
+            if (saleDate.getMonth() + 1 === month) {
                 const day = saleDate.getDate();
-                sale.getProducts().forEach(detail =>{
+                sale.getProducts().forEach(detail => {
                     const profit = detail.amount * (detail.product.getSalePrice() - detail.product.getUnitPrice());
                     profits[day - 1] += profit;
                 });
@@ -324,11 +357,11 @@ export class User{
         return profits;
     }
 
-    getProductProfits(){
+    getProductProfits() {
         const productProfits = {};
 
         this.#inventory.forEach(product => {
-            const profit = product.getSalePrice() -  product.getUnitPrice();
+            const profit = product.getSalePrice() - product.getUnitPrice();
             productProfits[product.getId()] = profit;
         });
         return productProfits;
