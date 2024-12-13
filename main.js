@@ -10,6 +10,7 @@ class App {
         
         this.initEventListeners();
         this.renderView('home');
+        this.initStorage();
     }
 
     initEventListeners() {
@@ -19,6 +20,10 @@ class App {
                 this.renderView(view);
             });
         });
+    }
+
+    initStorage(){
+        localStorage.setItem("users", JSON.stringify([]));
     }
 
     renderView(viewName) {
