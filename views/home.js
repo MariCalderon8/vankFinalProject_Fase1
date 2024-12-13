@@ -1,5 +1,8 @@
-export function renderHome(){
+export function renderHome() {
     return `
-        <h2>Aquí va el home</h2>
-    `
+        <div class="home-view">
+            <h1>Bienvenido a la Aplicación</h1>
+            <p>Esta es la página de inicio</p>
+        </div>
+    `;
 }
