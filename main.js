@@ -1,47 +1,70 @@
-import { renderHome } from "./views/home.js";
-import { renderLogin } from "./views/login.js";
-import { renderRegister } from "./views/register.js";
+import { HomeController } from "./controllers/homeController.js";
+import { LoginController } from "./controllers/loginController.js";
+import { RegisterController } from "./controllers/registerController.js";
 
 class App {
     constructor() {
         this.app = document.getElementById('app');
         this.navButtons = document.querySelectorAll('.navBtn');
         this.navLogo = document.getElementById('navLogo');
-        
+        this.currentController = null; 
         this.initEventListeners();
         this.renderView('home');
         this.initStorage();
     }
 
+    // Inicializa los event listeners de la barra de navegación
     initEventListeners() {
         this.navButtons.forEach(btn => {
             btn.addEventListener('click', (event) => {
                 const view = event.target.dataset.view;
-                this.renderView(view);
+                this.renderView(view); 
             });
+        });
+
+        // Lógica para el logo de navegación
+        this.navLogo.addEventListener('click', () => {
+            this.renderView('home');
         });
     }
 
-    initStorage(){
-        localStorage.setItem("users", JSON.stringify([]));
+    // Inicializa el almacenamiento local
+    initStorage() {
+        if (!localStorage.getItem("users")) {
+            localStorage.setItem("users", JSON.stringify([])); 
+        }
     }
 
     renderView(viewName) {
+        console.log("Renderizando vista:", viewName);  // Verificar si llega hasta aquí
+        this.app.innerHTML = ''; // Limpia el contenido actual
+
         switch(viewName) {
             case 'home':
-                this.app.innerHTML = renderHome();
+                console.log("Renderizando Home");
+                this.currentController = new HomeController(this.app);
                 break;
             case 'login':
-                this.app.innerHTML = renderLogin();
+                console.log("Renderizando Login");
+                this.currentController = new LoginController(this.app);
                 break;
             case 'register':
-                this.app.innerHTML = renderRegister();
+                console.log("Renderizando Register");
+                this.currentController = new RegisterController(this.app);
                 break;
             default:
-                this.app.innerHTML = renderHome();
+                console.log("Renderizando Home por defecto");
+                this.currentController = new HomeController(this.app);
                 break;
         }
+     
+        // Ejecutar el método render del controlador actual
+        this.currentController.render();
     }
-}
+}   
 
-new App();
+// Inicializamos la aplicación
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Iniciando APP");
+    new App();
+});

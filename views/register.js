@@ -48,6 +48,9 @@ export function renderRegister() {
                         <button type="submit" class="register-button">Registrarse</button>
                     </div>
                 </form>
+                 <div class="register-link">
+                    <p>¿Ya tienes cuenta? <a href="#" data-view="login">Iniciar sesión</a></p>
+                </div>
             </div>
         </div>
     `;

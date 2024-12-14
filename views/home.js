@@ -1,8 +1,16 @@
+// views/home.js
 export function renderHome() {
+    console.log('Rendering Home view');
     return `
-        <div class="home-view">
-            <h1>Bienvenido a la Aplicación</h1>
-            <p>Esta es la página de inicio</p>
-        </div>
+        <section class="home">
+            <div class="home-content">
+                <h1>¡Bienvenido a GestionPro!</h1>
+                <p>Gestiona tus ventas, inventarios y usuarios de manera eficiente.</p>
+                <button class="btn-primary" data-view="login">Inicia Sesión</button>
+            </div>
+            <div class="home-image">
+                <img src="images/ImagenHome.jpg" alt="Gestión de negocios" />
+            </div>
+        </section>
     `;
 }
