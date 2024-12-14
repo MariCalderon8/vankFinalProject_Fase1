@@ -15,18 +15,26 @@ export class RegisterController{
     initEventListeners() {
         const form = document.querySelector('.register-form');
         const cancelButton = document.querySelector('.cancel-button');
+        const loginLink = document.querySelector('.register-link a');
         
-        // Manejar el envío del formulario
+        // Maneja el envío del formulario
         form.addEventListener('submit', (event) => {
             event.preventDefault(); 
             console.log("Formulario enviado");
             this.handleRegister();  
         });
 
-        // Manejar el botón de cancelar
+        // Maneja el botón de cancelar
         cancelButton.addEventListener('click', () => {
             console.log("Botón de cancelar presionado");
             this.app.renderView('home');  
+        });
+
+        // Maneja el enlace "Iniciar sesión"
+        loginLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            console.log("Enlace 'Iniciar sesión' presionado");
+            this.app.renderView('login');
         });
     }
 

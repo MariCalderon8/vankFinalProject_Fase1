@@ -14,16 +14,24 @@ export class LoginController {
 
     initEventListeners() {
         const form = document.querySelector('.login-form');
-        
-        // Manejar el envío del formulario
+        const registerLink = document.querySelector('.register-link a');
+
+        // Maneja el envío del formulario
         form.addEventListener('submit', (event) => {
             event.preventDefault(); // Evitar el envío por defecto
-            this.handleLogin();  // Manejar el inicio de sesión
+            this.handleLogin();  // Maneja el inicio de sesión
+        });
+
+        // Maneja el enlace "Regístrate Aquí"
+        registerLink.addEventListener('click', (event) => {
+            event.preventDefault(); 
+            console.log("Enlace 'Regístrate Aquí' presionado");
+            this.app.renderView('register'); // Redirigir a la vista de registro
         });
     }
 
     handleLogin() {
-        // Obtener los valores del formulario
+        // Obtiene los valores del formulario
         const user = document.getElementById('user-login').value;
         const password = document.getElementById('password-login').value;
 
