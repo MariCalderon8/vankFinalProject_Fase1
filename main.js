@@ -1,3 +1,4 @@
+//main.js
 import { HomeController } from "./controllers/homeController.js";
 import { LoginController } from "./controllers/loginController.js";
 import { RegisterController } from "./controllers/registerController.js";
@@ -18,14 +19,11 @@ class App {
         this.navButtons.forEach(btn => {
             btn.addEventListener('click', (event) => {
                 const view = event.target.dataset.view;
+                console.log("Cambiar a vista:", view);
                 this.renderView(view); 
             });
         });
 
-        // Lógica para el logo de navegación
-        this.navLogo.addEventListener('click', () => {
-            this.renderView('home');
-        });
     }
 
     // Inicializa el almacenamiento local

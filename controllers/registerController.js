@@ -17,16 +17,19 @@ export class RegisterController{
         // Manejar el envío del formulario
         form.addEventListener('submit', (event) => {
             event.preventDefault(); 
+            console.log("Formulario enviado");
             this.handleRegister();  
         });
 
         // Manejar el botón de cancelar
         cancelButton.addEventListener('click', () => {
+            console.log("Botón de cancelar presionado");
             this.app.renderView('home');  
         });
     }
 
     handleRegister() {
+        console.log("Procesando el registro...");
          // Obtener los valores del formulario
          const name = document.getElementById('name-register').value;
          const idType = document.getElementById('idType-register').value;
@@ -43,7 +46,7 @@ export class RegisterController{
         }
 
         const users = JSON.parse(localStorage.getItem("users")) || [];
-        
+
         // Verificar si el correo electrónico ya está registrado
         const userExists = users.some(user => user.email === email);
         if (userExists) {
