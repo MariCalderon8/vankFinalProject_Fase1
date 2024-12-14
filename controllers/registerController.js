@@ -1,13 +1,9 @@
-import { renderRegister } from "../views/register.js";
+import { App } from "../main.js";
 
 export class RegisterController{
-    constructor(app) {
-        this.app = app;
-    }
-
-    render() {
-        this.app.innerHTML = renderRegister();
-        this.initEventListeners(); 
+    constructor() {
+        this.app = App.getInstance();
+        this.initEventListeners();
     }
 
     initEventListeners() {
@@ -30,6 +26,7 @@ export class RegisterController{
 
     handleRegister() {
         console.log("Procesando el registro...");
+
          // Obtener los valores del formulario
          const name = document.getElementById('name-register').value;
          const idType = document.getElementById('idType-register').value;
@@ -73,5 +70,4 @@ export class RegisterController{
         this.app.renderView('login');  // Redirigir a la vista de login
 
     }
-
 }

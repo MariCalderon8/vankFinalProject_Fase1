@@ -1,13 +1,9 @@
-import { renderLogin } from "../views/login.js";
+import { App } from "../main.js";
 
 export class LoginController {
-    constructor(app) {
-        this.app = app;
-    }
-
-    render() {
-        this.app.innerHTML = renderLogin();  // Renderiza la vista de login
-        this.initEventListeners();  // Inicializa los event listeners
+    constructor() {
+        this.app = App.getInstance();
+        this.initEventListeners();
     }
 
     initEventListeners() {

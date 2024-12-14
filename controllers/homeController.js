@@ -1,14 +1,10 @@
 // controllers/homeController.js
-import { renderHome } from "../views/home.js";
+import { App } from "../main.js";
 
 export class HomeController {
-    constructor(app) {
-        this.app = app;
-    }
-
-    render() {
-        console.log('Rendering Home view');
-        this.app.innerHTML = renderHome(); // Renderiza el HTML de la vista home
+    
+    constructor() {
+        this.app = App.getInstance();
         this.initEventListeners(); // Agrega los event listeners necesarios
     }
 
