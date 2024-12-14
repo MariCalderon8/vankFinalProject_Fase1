@@ -21,6 +21,41 @@ export class User{
         this.#billHistory = [];
     }
 
+    
+    // Método para convertir la instancia a un objeto serializable
+    toJSON() {
+        return {
+            name: this.#name,
+            idType: this.#idType,
+            id: this.#id,
+            email: this.#email,
+            password: this.#password,
+            tel: this.#tel,
+            address: this.#address,
+            inventory: this.#inventory,
+            billHistory: this.#billHistory
+        };
+    }
+
+    static fromJSON(json) {
+        const user = new User(
+            json.name, 
+            json.idType, 
+            json.id, 
+            json.email, 
+            json.password, 
+            json.tel, 
+            json.address
+        );
+        
+        user.#inventory = json.inventory || [];
+        user.#billHistory = json.billHistory || [];
+        
+        return user;
+        
+    }
+
+
     // Getters
     getName() {
         return this.#name;

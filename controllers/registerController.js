@@ -1,8 +1,14 @@
 import { App } from "../main.js";
+import { User } from "../models/User.js";
+import { renderRegister } from "../views/register.js";
 
 export class RegisterController{
     constructor() {
         this.app = App.getInstance();
+    }
+
+    render(){
+        this.app.appContent.innerHTML = renderRegister();
         this.initEventListeners();
     }
 
@@ -52,18 +58,9 @@ export class RegisterController{
         }
 
         // Crear un nuevo objeto de usuario
-        const newUser = {
-            name,
-            idType,
-            id,
-            email,
-            password,
-            tel,
-            address
-        };
-
+        const newUser = new User(name, idType, id, email, password, tel, address);
         // Agregar el nuevo usuario al array de usuarios
-        users.push(newUser);
+        users.push(newUser.toJSON());
         localStorage.setItem("users", JSON.stringify(users));
 
         alert('Registro exitoso. Ahora puedes iniciar sesión.');

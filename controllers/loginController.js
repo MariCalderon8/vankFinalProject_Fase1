@@ -1,8 +1,14 @@
 import { App } from "../main.js";
+import { User } from "../models/User.js";
+import { renderLogin } from "../views/login.js";
 
 export class LoginController {
     constructor() {
-        this.app = App.getInstance();
+        this.app = App.getInstance(); 
+    }
+
+    render(){
+        this.app.appContent.innerHTML = renderLogin();
         this.initEventListeners();
     }
 
@@ -39,6 +45,8 @@ export class LoginController {
         //Esto hay que cambiarlo
         // Redirigir al usuario a la página principal o dashboard 
         alert('Bienvenido, ' + userExists.name + '!');
+        this.app.loggedUser = User.fromJSON(userExists);
+        console.log(this.app.loggedUser);
         this.app.renderView('home');  // Vuelve a la vista de inicio o a un dashboard
     }
 }
