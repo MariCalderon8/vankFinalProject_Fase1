@@ -50,11 +50,9 @@ export class LoginController {
             return;
         }
 
-        //Esto hay que cambiarlo
         // Redirigir al usuario a la página principal o dashboard 
         alert('Bienvenido, ' + userExists.name + '!');
-        this.app.loggedUser = User.fromJSON(userExists);
-        console.log(this.app.loggedUser);
+        localStorage.setItem("loggedUser", userExists.email);
         this.app.renderView('home');  // Vuelve a la vista de inicio o a un dashboard
     }
 }

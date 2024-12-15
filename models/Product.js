@@ -5,16 +5,25 @@ export class Product{
     #description;
     #unitPrice;
     #salePrice;
-    #supplier;
 
-    constructor(id, name, category, description, unitPrice, salePrice, supplier){
+    constructor(id, name, category, description, unitPrice, salePrice){
         this.#id = id;
         this.#name = name;
         this.#category = category;
         this.#description = description;
         this.#unitPrice = unitPrice;
         this.#salePrice = salePrice;
-        this.#supplier = supplier;
+    }
+
+    toJSON() {
+        return {
+            id: this.#id,
+            name: this.#name,
+            category: this.#category,
+            description: this.#description,
+            unitPrice: this.#unitPrice,
+            salePrice: this.#salePrice,
+        };
     }
 
     // Getters
@@ -42,10 +51,6 @@ export class Product{
         return this.#salePrice;
     }
 
-    getSupplier() {
-        return this.#supplier;
-    }
-
     // Setters
     setName(value) {
         this.#name = value;
@@ -67,7 +72,4 @@ export class Product{
         this.#salePrice = value;
     }
 
-    setSupplier(value) {
-        this.#supplier = value;
-    }
 }

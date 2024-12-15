@@ -11,10 +11,13 @@ export class HomeController {
     }
 
     render(){
-        if(!this.app.loggedUser){
+        if(!this.app.isLogged()){
             this.app.appContent.innerHTML = renderHome();
+            console.log('Sin loggear');
         } else {
             this.app.appContent.innerHTML = renderHomeUser();
+            console.log('Con log');
+
         }
         this.initEventListeners();
     }

@@ -5,7 +5,7 @@ import { InventoryController } from "./controllers/inventoryController.js";
 import { LoginController } from "./controllers/loginController.js";
 import { RegisterController } from "./controllers/registerController.js";
 import { ReportsController } from "./controllers/reportsController.js";
-import { UsersController } from "./controllers/usersController.js";
+import { ClientsController } from "./controllers/clientsController.js";
 
 import { renderNavbar } from "./views/navBar.js";
 import { renderUserNavbar } from "./views/navBarUser.js";
@@ -25,7 +25,6 @@ export class App {
         this.logoutBtn = null;
 
         this.currentController = null;
-        this.loggedUser = null;
 
         this.#showNavbar();
         this.#initStorage();
@@ -38,15 +37,22 @@ export class App {
         return App.#instance;
     }
 
+    isLogged(){
+        if(!localStorage.getItem("loggedUser")){
+            return false;
+        }
+        return true;
+    }
+
     #showNavbar(){
-        if(this.loggedUser == null){
+        if(!this.isLogged()){
             this.#navbarContent.innerHTML = renderNavbar();
         } else {
             this.#navbarContent.innerHTML = renderUserNavbar();
         }
 
         this.#initEventListeners();
-        console.log('aqui toy');
+        console.log(`IsLogged: ${this.isLogged()}`);
     }
 
     // Inicializa los event listeners de la barra de navegación
@@ -62,7 +68,7 @@ export class App {
 
         // Inicializa el botón para cerrar sesión
 
-        if (this.loggedUser) {
+        if (this.isLogged()) {
             this.logoutBtn = document.getElementById('btnLogout');
             this.logoutBtn.addEventListener('click', (event) =>{
                 const view = event.target.dataset.view;
@@ -75,7 +81,7 @@ export class App {
     }
 
     #logout(){
-        this.loggedUser = null;
+        localStorage.removeItem("loggedUser");
     }
 
     // Inicializa el almacenamiento local
@@ -106,7 +112,7 @@ export class App {
                 break;
 
             case 'users':
-                this.currentController = new UsersController();
+                this.currentController = new ClientsController();
                 break;
 
             case 'inventory':
