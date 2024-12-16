@@ -1,3 +1,4 @@
+//Views/inventory.js
 export function renderInventory() {
     return `
         <div class="form-inventory-container">
@@ -41,9 +42,15 @@ export function renderInventory() {
 
                 </form>
 
-            <div class="tableInventory-container" id="tableInventory">
+            <div class="search-container">
+                <input type="text" id="search-bar" class="search-bar" placeholder="Buscar por nombre, código o categoría">
+                <div class="tableInventory-container" id="tableInventory">
             
+                </div>
             </div>
+
+            
         </div>
     `;
 }
+

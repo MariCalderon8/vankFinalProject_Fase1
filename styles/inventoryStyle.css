@@ -1,3 +1,4 @@
+/* styles/inventoryStyle.css */
 .form-inventory-container {
     margin: 0 auto;
     padding: 20px;
@@ -92,3 +93,23 @@
 .table-inventory .btn-info:hover{
     background-color: #0056b3;
 }
+
+/* Barra de búsqueda */
+.search-bar {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-bar:focus {
+    border-color: #007BFF;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+

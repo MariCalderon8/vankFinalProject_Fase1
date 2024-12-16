@@ -1,3 +1,4 @@
+//controllers/inventoryController.js
 import { App } from "../main.js";
 import { Product } from "../models/Product.js";
 import { renderInventory } from "../views/inventory.js";
@@ -59,13 +60,22 @@ export class InventoryController {
     // INICIALIZAR EVENTOS
 
     initEventListeners() {
-        const form = document.querySelector('.form-product')
+        const form = document.querySelector('.form-product');
+        const searchBar = document.getElementById('search-bar');
+
         // Maneja el envío del formulario
         form.addEventListener('submit', (event) => {
             event.preventDefault();
             console.log("Formulario enviado");
             this.handleCreateProduct();
         });
+
+        //Maneja la búsqueda
+        searchBar.addEventListener('input', (event) => {
+            const query = event.target.value.toLowerCase();
+            this.handleSearch(query);
+            console.log("Buscando producto");
+        })
     }
 
     initEventListenersTable() {
@@ -136,9 +146,52 @@ export class InventoryController {
     }
 
     showInfoProduct(idProduct){
-        alert('X: ¿Donde esá el producto?')
-        alert(`${idProduct}: AQUI TOY :D`)
+        const loggedUser = this.userController.getLoggedUser(); //Obtener el usaurio loggeado
+        const product = loggedUser.getProductById(idProduct);//Buscar el producto por su ID
+
+    //En caso de algún error
+        if (!product) {
+            alert(`No se encontró un producto con el código: ${idProduct}`);
+            return;
+        }
+
+        //Alert que muestra la descripción
+        alert(`DESCRIPCIÓN DEL PRODUCTO CON CÓDIGO ${idProduct}:\n\n${product.getDescription()}`);
     }
+
+    handleSearch(findProduct) {
+        const loggedUser = this.userController.getLoggedUser();
+        const inventory = loggedUser.getInventory();
+
+        const filteredProducts = inventory.filter((product) => {
+            let id = "";
+            let name = "";
+            let category = "";
+
+            // Validar y asignar valores a las variables
+            if (product.getId()) {
+                id = product.getId().toString().toLowerCase();
+            }
+
+            if (product.getName()) {
+                name = product.getName().toLowerCase();
+            }
+
+            if (product.getCategory()) {
+                category = product.getCategory().toLowerCase();
+            }
+
+            // Comprobar si la consulta está en alguna de las propiedades
+            if (id.includes(findProduct) || name.includes(findProduct) || category.includes(findProduct)) {
+                return true;
+            }
+
+            return false;
+        });
+
+        this.renderTable(filteredProducts);
+    }
+    
 
     clearFields() {
         const form = document.querySelector('.form-product');

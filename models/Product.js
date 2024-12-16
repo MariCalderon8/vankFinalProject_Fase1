@@ -1,3 +1,4 @@
+//models/product.js
 export class Product{
     #id;
     #name;

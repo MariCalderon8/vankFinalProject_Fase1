@@ -1,3 +1,4 @@
+//controllers/usersController
 import { User } from "../models/User.js";
 
 export class UserController{
