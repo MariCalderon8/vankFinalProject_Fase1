@@ -113,3 +113,10 @@
     margin-bottom: 20px;
 }
 
+.table-inventory .btn-edit {
+    background-color: #28a745; /* Green for Edit */
+}
+
+.table-inventory .btn-edit:hover {
+    background-color: #218838;
+}

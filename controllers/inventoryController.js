@@ -20,6 +20,7 @@ export class InventoryController {
     }
 
     renderTable(products = this.userController.getLoggedUser().getInventory()) {
+        console.log(products);
         const table = document.getElementById('tableInventory');
         let rows = products.map((product, i) =>
             `<tr>
@@ -30,6 +31,7 @@ export class InventoryController {
                     <td>$${product.getSalePrice()}</td>
                     <td>
                     <button class="btn-delete" data-id="${product.getId()}">Eliminar</button>
+                    <button class="btn-edit" data-id="${product.getId()}">Editar</button>
                     <button class="btn-info" data-id="${product.getId()}">Info</button>
                     </td>
             </tr>
@@ -81,6 +83,7 @@ export class InventoryController {
     initEventListenersTable() {
         const deleteButtons = document.querySelectorAll('.btn-delete'); 
         const infoButtons = document.querySelectorAll('.btn-info');
+        const editButtons = document.querySelectorAll('.btn-edit');
 
         deleteButtons.forEach((button) => {
             const idProduct = button.getAttribute('data-id'); // Obtiene el ID del producto desde el atributo data-id
@@ -95,6 +98,13 @@ export class InventoryController {
                 this.showInfoProduct(idProduct);
             });
         });
+
+        editButtons.forEach((button) => {
+            const idProduct = button.getAttribute('data-id');
+            button.addEventListener('click', () =>{
+                this.handleEditProduct(idProduct);
+            })
+        })
     }
 
 
@@ -120,9 +130,10 @@ export class InventoryController {
 
         let user = this.userController.getLoggedUser();
         const productExist = user.getProductById(id);
+
         if (productExist) {
             alert('Ya existe un producto registrado con este código');
-            return
+            return;
         }
         const product = new Product(id, name, category, description, unitPrice, salePrice);
 
@@ -190,6 +201,65 @@ export class InventoryController {
         });
 
         this.renderTable(filteredProducts);
+    }
+
+    handleEditProduct(idProduct) {
+        const loggedUser = this.userController.getLoggedUser();
+        const product = loggedUser.getProductById(idProduct);
+        
+        if (!product) {
+            alert(`No se encontró producto con el código: ${idProduct}`);
+            return;
+        }
+    
+        // Rellenar los campos con los datos del producto
+        document.getElementById('idProduct-formInventory').value = product.getId(); // El código no se edita
+        document.getElementById('nameProduct-formInventory').value = product.getName();
+        document.getElementById('categoryProduct-formInventory').value = product.getCategory();
+        document.getElementById('descriptionProduct-formInventory').value = product.getDescription();
+        document.getElementById('unitPriceProduct-formInventory').value = product.getUnitPrice();
+        document.getElementById('salePriceProduct-formInventory').value = product.getSalePrice();
+    
+        const submitButton = document.querySelector('.form-product button[type="submit"]');
+        submitButton.textContent = 'Guardar cambios';    
+    
+        // Cambiar el evento de submit para actualizar el producto específico
+        this.handleUpdateProduct(idProduct);
+    }
+
+    handleUpdateProduct(idProduct) {
+        const form = document.querySelector('.form-product');
+        
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+    
+            const name = document.getElementById('nameProduct-formInventory').value;
+            const category = document.getElementById('categoryProduct-formInventory').value;
+            const description = document.getElementById('descriptionProduct-formInventory').value;
+            const unitPrice = document.getElementById('unitPriceProduct-formInventory').value;
+            const salePrice = document.getElementById('salePriceProduct-formInventory').value;
+    
+            const loggedUser = this.userController.getLoggedUser();
+            const product = loggedUser.getProductById(idProduct);
+    
+            // Actualizar los campos del producto
+            product.setName(name);
+            product.setCategory(category);
+            product.setDescription(description);
+            product.setUnitPrice(unitPrice);
+            product.setSalePrice(salePrice);
+    
+            this.userController.updateUser(loggedUser); // Guardar los cambios
+    
+            alert('Producto actualizado correctamente');
+            this.renderTable();  // Volver a renderizar la tabla con los cambios
+            
+            // Limpiar el formulario y resetear el botón
+            this.clearFields();
+            
+            const submitButton = document.querySelector('.form-product button[type="submit"]');
+            submitButton.textContent = 'Agregar';
+        });
     }
     
 
