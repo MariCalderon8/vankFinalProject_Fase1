@@ -1,4 +1,5 @@
 import { Product } from "./Product.js";
+import { Client } from "./Client.js";
 
 export class User{
     #name;
@@ -10,6 +11,7 @@ export class User{
     #address;
     #inventory;
     #billHistory;
+    #clients;
 
     constructor(name, idType, id, email, password, tel, address){
         this.#name = name;
@@ -21,6 +23,7 @@ export class User{
         this.#address = address;
         this.#inventory = [];
         this.#billHistory = [];
+        this.#clients = [];
     }
 
     
@@ -35,7 +38,8 @@ export class User{
             tel: this.#tel,
             address: this.#address,
             inventory: this.#inventory,
-            billHistory: this.#billHistory
+            billHistory: this.#billHistory,
+            clients: this.#clients
         };
     }
 
@@ -50,10 +54,13 @@ export class User{
             json.address
         );
         
-        const inventory = json.inventory;
+        const inventory = json.inventory || [];
         user.#inventory = inventory.map(product => Product.fromJSONtoProduct(product)); // Convierte todos los objetos del arreglo inventory en instancias de Product
 
         user.#billHistory = json.billHistory || [];
+
+        const clients = json.clients || [];
+        user.#clients = clients.map(client => Client.fromJSONToClient(client));
         
         return user;
     }
@@ -94,6 +101,10 @@ export class User{
 
     getBillHistory() {
         return this.#billHistory;
+    }
+
+    getClients() {
+        return this.#clients;
     }
 
     // Setters
@@ -167,5 +178,28 @@ export class User{
         let bill = this.getBillById(id);
         this.#billHistory.splice(this.#billHistory.indexOf(bill), 1);
     }
-    
+
+    //GESTION DE CLIENTES
+    getClientById(id) {
+        return this.#clients.find(client => client.getId() === id);
+    }
+
+    addNewClient(client) {
+        this.#clients.push(client);
+    }
+
+    updateClient(updatedClient) {
+        const index = this.#clients.findIndex(client => client.getId() === updatedClient.getId());
+        if (index !== -1) {
+            this.#clients[index] = updatedClient;  // Actualiza el cliente
+        }
+    }
+
+    deleteClient(id) {
+        const index = this.#clients.findIndex(client => client.getId() === id);
+        if (index !== -1) {
+            this.#clients.splice(index, 1);  // Elimina el cliente
+        }
+    }
+    
 }
