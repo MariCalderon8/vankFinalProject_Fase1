@@ -26,6 +26,16 @@ export class Product{
         };
     }
 
+    static fromJSONtoProduct(json){
+        return new Product(
+            json.id, 
+            json.name, 
+            json.category, 
+            json.description, 
+            json.unitPrice, 
+            json.salePrice);
+    }
+
     // Getters
     getId() {
         return this.#id;

@@ -1,3 +1,5 @@
+import { Product } from "./Product.js";
+
 export class User{
     #name;
     #idType;
@@ -48,11 +50,12 @@ export class User{
             json.address
         );
         
-        user.#inventory = json.inventory || [];
+        const inventory = json.inventory;
+        user.#inventory = inventory.map(product => Product.fromJSONtoProduct(product)); // Convierte todos los objetos del arreglo inventory en instancias de Product
+
         user.#billHistory = json.billHistory || [];
         
         return user;
-        
     }
 
 
@@ -126,7 +129,7 @@ export class User{
     // GESTIÓN PRODUCTOS
 
     getProductById(id) {
-        return this.#inventory.find(product => product.id == id);
+        return this.#inventory.find(product => product.getId() == id);
     }
 
     addNewProduct(product) {
@@ -141,10 +144,14 @@ export class User{
     }
 
     deletProduct(id) {
-        let product = this.getProductById(id);
-        this.#inventory.splice(this.#inventory.indexOf(product), 1);
+        const index = this.#inventory.findIndex(product => product.getId() === id); 
+        if (index === -1) {
+            console.error(`Producto con ID ${id} no encontrado`);
+            return;
+        }
+        this.#inventory.splice(index, 1); // Elimina el producto
+        console.log(`Producto con ID ${id} eliminado correctamente`);
     }
-
 
     // GESTIÓN HISTORIAL DE FACTURAS
 
