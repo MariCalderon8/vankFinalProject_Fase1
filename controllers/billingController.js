@@ -116,6 +116,7 @@ export class BillingController{
         form.addEventListener('submit', (event) => {
             event.preventDefault();
             this.handleCreateBill();
+
         });
 
         //Maneja la búsqueda
@@ -247,8 +248,17 @@ export class BillingController{
         const clientEmail = document.getElementById('correo').value;
         const paymentMethod = document.getElementById('forma-pago').value;
         const paymentWay = document.getElementById('medio-pago').value;
-    
+
         // Validaciones
+        const user = this.userController.getLoggedUser();
+        const clientExists = user.getClientById(clientId);
+        
+        console.log("Cliente existente: ",clientExists);
+        if (!clientExists) {
+            alert('El cliente no existe en la tienda. No se puede crear la factura.');
+            return;
+        }
+
         if (!clientId || !clientName || !clientEmail || !expirationDate || !paymentMethod || !paymentWay) {
             alert("Por favor complete todos los campos de facturación.");
             return;
@@ -307,16 +317,14 @@ export class BillingController{
             }))
             
         });
-        console.log("Factura generada con ID: ", sale.getId());
     
         // Guardar la factura en el usuario
-        const user = this.userController.getLoggedUser();
+        
         user.addNewSale(sale);
         this.userController.updateUser(user);
         console.log(user);
     
         alert("Factura generada con éxito.");
-    
         
         this.clearFields();
     }
@@ -424,11 +432,21 @@ export class BillingController{
     }
     
     handleDeleteSale(saleId) {
-        console.log("ID de la venta a eliminar:", saleId); // Verificar que el saleId se pase correctamente
+        console.log("ID de la venta a eliminar:", saleId);
         const user = this.userController.getLoggedUser();
         const sales = user.getSaleHistory();
-     
-        const saleIndex = sales.findIndex(sale => sale.getId().toString() === saleId.toString());
+    
+        // Validación de ventas
+        console.log("Ventas disponibles:", sales);
+        sales.forEach((sale, index) => {
+            console.log(`Venta #${index}:`, sale, "ID:", sale.getId());
+        });
+    
+        const saleIndex = sales.findIndex(sale => { 
+            const id = sale.getId();
+            return id && id.toString() === saleId.toString();
+        });
+    
         if (saleIndex !== -1) {
             sales.splice(saleIndex, 1);
             this.userController.updateUser(user);
@@ -439,6 +457,18 @@ export class BillingController{
         }
     }
     
+    handleGeneratePDF(saleId) {
+        const user = this.userController.getLoggedUser();
+        const sales = user.getSaleHistory();
+    
+        const sale = sales.find(sale => sale.getId() === saleId);
+        if (!sale) {
+            alert("Factura no encontrada.");
+            return;
+        }
+    
+        generatePDF(sale);
+    }
 
     clearFields() {
         const user = this.userController.getLoggedUser();
