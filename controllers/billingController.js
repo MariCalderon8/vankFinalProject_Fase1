@@ -1,6 +1,8 @@
+//controllers/billingController.js
 import { App } from "../main.js";
 import { renderBilling } from "../views/billing.js";
 import { UserController } from "./usersController.js";
+import { Sale } from "../models/Sale.js";
 
 export class BillingController{
 
@@ -18,8 +20,13 @@ export class BillingController{
         this.app.appContent.innerHTML = renderBilling();
         this.initEventListeners();
 
+        const issueDataInput = document.getElementById('fecha-emision');
+        const today = new Date().toISOString().split('T')[0];
+        issueDataInput.value = today;
+
         this.renderTableExistingProducts();
         this.renderTableBillProducts();
+        this.loadSalesHistory();
     }
 
     renderTableExistingProducts(products = this.existingProducts){
@@ -103,6 +110,7 @@ export class BillingController{
         const form = document.querySelector('.form-billing');
         const searchBar = document.getElementById('search-bar-billing');
         const cancelBill = document.querySelector('.cancelBill');
+        const idInput = document.getElementById('id');
 
         // Maneja el envío del formulario
         form.addEventListener('submit', (event) => {
@@ -119,8 +127,16 @@ export class BillingController{
 
         cancelBill.addEventListener('click', (event) => {
             event.preventDefault();
-            //LIMPIAR CAMPOS 
-        })
+
+        });
+
+        idInput.addEventListener('keydown', (event) =>{
+            if (event.key === 'Enter'){
+                event.preventDefault();
+                const clientId = event.target.value.trim();
+                this.handleSearchClientById(clientId);
+            }
+        });
     }
 
     initEventsListenersTableExistingProducts(){
@@ -223,12 +239,206 @@ export class BillingController{
     }
 
 
-    handleCreateBill(){
-        // AQUI VA PARA CREAR LA FACTURA
+    handleCreateBill() {
+        const issueDate = new Date(); // Toma la fecha de emisión directamente del sistema
+        const expirationDate = new Date(document.getElementById('fecha-vencimiento').value);
+        const clientId = document.getElementById('id').value;
+        const clientName = document.getElementById('nombre').value;
+        const clientEmail = document.getElementById('correo').value;
+        const paymentMethod = document.getElementById('forma-pago').value;
+        const paymentWay = document.getElementById('medio-pago').value;
+    
+        // Validaciones
+        if (!clientId || !clientName || !clientEmail || !expirationDate || !paymentMethod || !paymentWay) {
+            alert("Por favor complete todos los campos de facturación.");
+            return;
+        }
+    
+        if (this.billProducts.length === 0) {
+            alert("No se han seleccionado productos para la factura.");
+            return;
+        }
+    
+        if (new Date(expirationDate) < new Date(issueDate)) {
+            alert("La fecha de vencimiento no puede ser anterior a la fecha de emisión.");
+            return;
+        }
+    
+        if (new Date(issueDate) > new Date()) {
+            alert("La fecha de emisión no puede ser superior a la fecha actual.");
+            return;
+        }
+    
+        // Asegúrate de que el cliente está correctamente asignado
+        const client = {
+            id: clientId,
+            name: clientName,
+            email: clientEmail
+        };
+    
+        // Crear instancia de Sale
+        const sale = new Sale(
+            client, // Pasar el objeto cliente al constructor de Sale
+            new Date(expirationDate),
+            paymentMethod,
+            paymentWay,
+            this.billProducts.map((detail) => ({
+                product: detail.product.toJSON(),
+                amount: detail.amount,
+            }))
+        );
+    
+        // Console log para depuración con la información de la factura
+        console.log("Factura generada:", {
+            client: client, // Verifica que el cliente esté correctamente asignado
+            issueDate: issueDate,
+            expirationDate: expirationDate,
+            paymentMethod: paymentMethod,
+            paymentWay: paymentWay,
+            products: this.billProducts.map(detail => ({
+                productId: detail.product.getId(),
+                productName: detail.product.getName(),
+                productPrice: detail.product.getSalePrice(),
+                amount: detail.amount
+            
+            }))
+            
+        });
+        console.log("Factura generada con ID: ", sale.getId());
+    
+        // Guardar la factura en el usuario
+        const user = this.userController.getLoggedUser();
+        user.addNewSale(sale.toJSON());
+        this.userController.updateUser(user);
+    
+        alert("Factura generada con éxito.");
+    
+        // Reiniciar tablas y limpiar campos
+        this.billProducts = [];
+        this.existingProducts = user.getInventory(); // Recargar inventario
+        this.sortExistingProducts();
+        this.renderTableExistingProducts();
+        this.renderTableBillProducts();
+        this.loadSalesHistory();
+        this.clearFields();
+    }
+    
+    handleSearchClientById(clientId){
+        const user = this.userController.getLoggedUser();
+        console.log("Clientes del usuario:", user.getClients());
+        const client = user.getClients().find((client) => 
+            client.getId().toString().trim().toLowerCase() === clientId.toString().trim().toLowerCase()
+        );
+        console.log("Cliente buscado:", clientId, "Resultado:", client);
 
-        // Al terminar no olvidar reiniciar existingProducts con los productos del usuario y llamar savesaveProductsDetails
+        const nameInput = document.getElementById('nombre');
+        const emailInput = document.getElementById('correo');
+
+        if (client) {
+            nameInput.value = client.getName() || '';
+            emailInput.value = client.getEmail() || '';
+        } else {
+            nameInput.value = '';
+            emailInput.value = '';
+            alert("Cliente no encontrado, por favor regístrelo");
+        }
     }
 
+    loadSalesHistory() {
+        const user = this.userController.getLoggedUser();
+        const sales = user.getSaleHistory();
+        
+        const table = document.getElementById('table-salesHistory');
+        console.log('Table element:', table);  // Debugging line
 
+        // Función para formatear fechas de formato ISO a dd/mm/yyyy
+        const formatDate = (date) => {
+            // Convierte el parámetro date en un objeto Date (funciona con fechas ISO, timestamps, y objetos Date)
+            const d = new Date(date);
+            
+            // Obtiene el día del mes, lo convierte a string y añade un 0 inicial si es necesario
+            const day = d.getDate().toString().padStart(2, '0');
+            
+            // Obtiene el mes (getMonth() devuelve 0-11, por eso sumamos 1) Lo convierte a string y añade un 0 inicial si es necesario
+            const month = (d.getMonth() + 1).toString().padStart(2, '0');
+            
+            // Obtiene el año completo (4 dígitos)
+            const year = d.getFullYear();
+            
+            // Devuelve la fecha formateada como dd/mm/yyyy
+            return `${day}/${month}/${year}`;
+        };
+    
+    
+        let rows = sales.map(sale => {
+            return `
+            <tr>
+                <td>${sale.getId() || 'ID no disponible'}</td>
+                <td>${sale.getClient().id || 'ID no disponible'}</td>
+                <td>${sale.getClient().name || 'Nombre no disponible'}</td>
+                <td>${formatDate(sale.getIssueDate())}</td>
+                <td>${formatDate(sale.getExpirationDate())}</td>
+                <td>${sale.getPaymentWay() || 'Método de pago no disponible'}</td>
+                <td>
+                    <button type="button" class="btn-deleteSale" data-id="${sale.getId()}">Eliminar</button>
+                </td>
+            </tr>
+            `;
+        }).join('');
 
+        if (table) {
+            table.innerHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID Cliente</th>
+                        <th>Nombre Cliente</th>
+                        <th>Fecha Emisión</th>
+                        <th>Fecha Vencimiento</th>
+                        <th>Forma de Pago</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rows || '<tr><td colspan="6">No se encontraron ventas</td></tr>'}
+                </tbody>
+            </table>
+            `;
+        }
+    
+        this.initEventsListenersTableSalesHistory();
+    }
+    
+    
+    initEventsListenersTableSalesHistory() {
+        const btnDeleteSale = document.querySelectorAll('.btn-deleteSale');
+        btnDeleteSale.forEach((button) => {
+            const saleId = button.getAttribute('data-id');
+            button.addEventListener('click', () => {
+                this.handleDeleteSale(saleId);
+            });
+        });
+    }
+    
+    handleDeleteSale(saleId) {
+        console.log("ID de la venta a eliminar:", saleId); // Verificar que el saleId se pase correctamente
+        const user = this.userController.getLoggedUser();
+        const sales = user.getSaleHistory();
+     
+        const saleIndex = sales.findIndex(sale => sale.getId().toString() === saleId.toString());
+        if (saleIndex !== -1) {
+            sales.splice(saleIndex, 1);
+            this.userController.updateUser(user);
+            this.loadSalesHistory();
+        } else {
+            alert("Venta no encontrada.");
+        }
+    }
+    
+
+    clearFields() {
+        const form = document.querySelector('.form-billing');
+        form.reset();
+    }
 }

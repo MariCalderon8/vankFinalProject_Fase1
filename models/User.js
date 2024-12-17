@@ -1,3 +1,4 @@
+//models/user.js
 import { Product } from "./Product.js";
 import { Client } from "./Client.js";
 import { Sale } from "./Sale.js";

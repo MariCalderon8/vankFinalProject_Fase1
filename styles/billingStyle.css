@@ -56,7 +56,7 @@ select {
 
 .tableProducts th,
 .tableProducts td {
-    border: 1px solid #007BFF;
+    border: 1px solid #007bff;
     padding: 8px;
 }
 
@@ -81,4 +81,63 @@ select {
 
 button:hover {
     background-color: #0056b3;
+}
+
+#sales-history table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#sales-history th, #sales-history td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #007bff;
+}
+
+#sales-history button {
+    background-color: red;
+    color: white;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+#sales-history button:hover {
+    background-color: darkred;
+}
+
+
+#table-salesHistory table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+#table-salesHistory th,
+#table-salesHistory td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #007bff;
+}
+
+#table-salesHistory th {
+    background-color: #007BFF;
+    color: white;
+}
+
+#table-salesHistory td {
+    background-color: #f9f9f9;
+}
+
+#table-salesHistory button {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+#table-salesHistory button:hover {
+    background-color: darkred;
 }

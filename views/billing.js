@@ -1,3 +1,4 @@
+//views/billing.js
 export function renderBilling() {
     return `
     <body>
@@ -62,6 +63,11 @@ export function renderBilling() {
                 <button type="submit" class="btn btnCreateBill">Generar factura</button>
                 <button type="button" class="btn cancelBill">Cancelar</button>
             </form>
+
+            <h2>Historial de facturación</h2>
+            <div class="table-salesHistory" id="table-salesHistory">
+                <!-- La tabla de historial de ventas se renderiza aquí -->
+            </div>
         </div>
     </body>
     </html>
