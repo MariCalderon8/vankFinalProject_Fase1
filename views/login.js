@@ -5,7 +5,7 @@ export function renderLogin() {
                 <h2>Iniciar Sesión</h2>
                 <form class="login-form">
                     <div class="form-group">
-                        <label for="user-login">Usuario: </label>
+                        <label for="user-login">Correo: </label>
                         <input type="text" id="user-login" placeholder="myUser_example" required>
                     </div>
                     <div class="form-group">

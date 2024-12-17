@@ -127,7 +127,7 @@ export class BillingController{
 
         cancelBill.addEventListener('click', (event) => {
             event.preventDefault();
-
+            this.clearFields();
         });
 
         idInput.addEventListener('keydown', (event) =>{
@@ -230,7 +230,7 @@ export class BillingController{
             const productAmount = document.querySelectorAll('.productAmount');
             this.billProducts.forEach((productDetail, i) => {
                 if (productAmount[i]) {
-                    productDetail.amount = productAmount[i].value;
+                    productDetail.amount = parseInt(productAmount[i].value);
                 }
                 
                 console.log(i);
@@ -276,6 +276,8 @@ export class BillingController{
             email: clientEmail
         };
     
+        this.saveProductsDetails();
+
         // Crear instancia de Sale
         const sale = new Sale(
             client, // Pasar el objeto cliente al constructor de Sale
@@ -287,6 +289,7 @@ export class BillingController{
                 amount: detail.amount,
             }))
         );
+
     
         // Console log para depuración con la información de la factura
         console.log("Factura generada:", {
@@ -308,18 +311,13 @@ export class BillingController{
     
         // Guardar la factura en el usuario
         const user = this.userController.getLoggedUser();
-        user.addNewSale(sale.toJSON());
+        user.addNewSale(sale);
         this.userController.updateUser(user);
+        console.log(user);
     
         alert("Factura generada con éxito.");
     
-        // Reiniciar tablas y limpiar campos
-        this.billProducts = [];
-        this.existingProducts = user.getInventory(); // Recargar inventario
-        this.sortExistingProducts();
-        this.renderTableExistingProducts();
-        this.renderTableBillProducts();
-        this.loadSalesHistory();
+        
         this.clearFields();
     }
     
@@ -345,11 +343,14 @@ export class BillingController{
     }
 
     loadSalesHistory() {
+        console.log('load Table');
         const user = this.userController.getLoggedUser();
         const sales = user.getSaleHistory();
+
+        console.log(sales);
         
         const table = document.getElementById('table-salesHistory');
-        console.log('Table element:', table);  // Debugging line
+        //console.log('Table element:', table);  // Debugging line
 
         // Función para formatear fechas de formato ISO a dd/mm/yyyy
         const formatDate = (date) => {
@@ -371,6 +372,7 @@ export class BillingController{
     
     
         let rows = sales.map(sale => {
+            console.log(sale);
             return `
             <tr>
                 <td>${sale.getId() || 'ID no disponible'}</td>
@@ -431,6 +433,7 @@ export class BillingController{
             sales.splice(saleIndex, 1);
             this.userController.updateUser(user);
             this.loadSalesHistory();
+            alert("Factura eliminada con éxito");
         } else {
             alert("Venta no encontrada.");
         }
@@ -438,7 +441,23 @@ export class BillingController{
     
 
     clearFields() {
+        const user = this.userController.getLoggedUser();
+
+        // Reiniciar tablas y limpiar campos
+        this.billProducts = [];
+        this.existingProducts = user.getInventory(); // Recargar inventario
+        this.sortExistingProducts();
+        this.renderTableExistingProducts();
+        this.renderTableBillProducts();
+        this.loadSalesHistory();
+
+        // Reiniciar formulario
         const form = document.querySelector('.form-billing');
         form.reset();
+
+        // Reiniciar fecha de emisión
+        const issueDataInput = document.getElementById('fecha-emision');
+        const today = new Date().toISOString().split('T')[0];
+        issueDataInput.value = today;
     }
 }

@@ -11,8 +11,7 @@ export class Sale {
     #products;
 
     constructor(client, expirationDate, paymentMethod, paymentWay, products) {
-        // Asignar el ID antes de incrementar el contador
-        this.#id = Sale.saleCounter++;
+        this.#id = -1;
         this.#client = client;
         this.#issueDate = new Date();
         this.#expirationDate = expirationDate;
@@ -49,6 +48,10 @@ export class Sale {
         return this.#id;
     }
 
+    setId(id){
+        this.#id = id;
+    }
+
     toJSON() {
         return {
             id: this.#id,
@@ -62,12 +65,14 @@ export class Sale {
     }
 
     static fromJSONToSale(sale) {
-        return new Sale(
+        let newSale = new Sale(
             sale.client, 
             sale.expirationDate, 
             sale.paymentMethod, 
             sale.paymentWay, 
             sale.products
-        );
+        )
+        newSale.setId(sale.id);
+        return newSale;
     }
 }

@@ -11,6 +11,7 @@ export class User{
     #password;
     #tel;
     #address;
+    #billNum;
     #inventory;
     #saleHistory;
     #clients;
@@ -23,6 +24,7 @@ export class User{
         this.#password = password; //SI QUEDA TIEMPO DE PRONTO HACER HASHEARLA
         this.#tel = tel;
         this.#address = address;
+        this.#billNum = 0;
         this.#inventory = [];
         this.#saleHistory = [];
         this.#clients = [];
@@ -39,6 +41,7 @@ export class User{
             password: this.#password,
             tel: this.#tel,
             address: this.#address,
+            billNum: this.#billNum,
             inventory: this.#inventory,
             saleHistory: this.#saleHistory,
             clients: this.#clients
@@ -53,14 +56,16 @@ export class User{
             json.email, 
             json.password, 
             json.tel, 
-            json.address
+            json.address,
         );
+        user.#billNum = json.billNum;
         
         const inventory = json.inventory || [];
         user.#inventory = inventory.map(product => Product.fromJSONtoProduct(product)); // Convierte todos los objetos del arreglo inventory en instancias de Product
 
         const saleHistory = json.saleHistory || [];
         user.#saleHistory = saleHistory.map(sale => Sale.fromJSONToSale(sale));
+        console.log(saleHistory);
 
         const clients = json.clients || [];
         user.#clients = clients.map(client => Client.fromJSONToClient(client));
@@ -139,6 +144,10 @@ export class User{
         this.#address = address;
     }
 
+    setBillNum(billNum) {
+        this.#billNum = billNum;
+    }
+
 
     // GESTIÓN PRODUCTOS
 
@@ -174,7 +183,10 @@ export class User{
     }
 
     addNewSale(sale) {
-        this.#saleHistory.push(sale);
+        this.#billNum++;
+        sale.setId(this.#billNum);
+        console.log(`Antes de agregar: ${sale.getId()} ${sale.getExpirationDate()}`);
+        this.#saleHistory.push(sale.toJSON());
     }
 
     deleteSale(id) {
