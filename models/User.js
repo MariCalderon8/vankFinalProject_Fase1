@@ -1,5 +1,6 @@
 import { Product } from "./Product.js";
 import { Client } from "./Client.js";
+import { Sale } from "./Sale.js";
 
 export class User{
     #name;
@@ -10,7 +11,7 @@ export class User{
     #tel;
     #address;
     #inventory;
-    #billHistory;
+    #saleHistory;
     #clients;
 
     constructor(name, idType, id, email, password, tel, address){
@@ -22,7 +23,7 @@ export class User{
         this.#tel = tel;
         this.#address = address;
         this.#inventory = [];
-        this.#billHistory = [];
+        this.#saleHistory = [];
         this.#clients = [];
     }
 
@@ -38,7 +39,7 @@ export class User{
             tel: this.#tel,
             address: this.#address,
             inventory: this.#inventory,
-            billHistory: this.#billHistory,
+            saleHistory: this.#saleHistory,
             clients: this.#clients
         };
     }
@@ -57,7 +58,8 @@ export class User{
         const inventory = json.inventory || [];
         user.#inventory = inventory.map(product => Product.fromJSONtoProduct(product)); // Convierte todos los objetos del arreglo inventory en instancias de Product
 
-        user.#billHistory = json.billHistory || [];
+        const saleHistory = json.saleHistory || [];
+        user.#saleHistory = saleHistory.map(sale => Sale.fromJSONToSale(sale));
 
         const clients = json.clients || [];
         user.#clients = clients.map(client => Client.fromJSONToClient(client));
@@ -99,8 +101,8 @@ export class User{
         return this.#inventory;
     }
 
-    getBillHistory() {
-        return this.#billHistory;
+    getSaleHistory() {
+        return this.#saleHistory;
     }
 
     getClients() {
@@ -166,17 +168,17 @@ export class User{
 
     // GESTIÓN HISTORIAL DE FACTURAS
 
-    getBillById(id) {
-        return this.#billHistory.find(bill => bill.id == id);
+    getSaleById(id) {
+        return this.#saleHistory.find(sale => sale.id == id);
     }
 
-    addNewBill(bill) {
-        this.#billHistory.push(bill);
+    addNewSale(sale) {
+        this.#saleHistory.push(sale);
     }
 
-    deleteBill(id) {
-        let bill = this.getBillById(id);
-        this.#billHistory.splice(this.#billHistory.indexOf(bill), 1);
+    deleteSale(id) {
+        let sale = this.getSaleById(id);
+        this.#saleHistory.splice(this.#saleHistory.indexOf(sale), 1);
     }
 
     //GESTION DE CLIENTES
