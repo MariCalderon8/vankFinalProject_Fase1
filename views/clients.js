@@ -1,10 +1,11 @@
 // Views/clients.js
 export function renderClients() {
     return `
+    <section class="client-section">
+        <h2>Gestión de Clientes</h2>
         <div class="form-clients-container">
-
             <form class="form-client">
-                <h2>Gestión de Clientes</h2>
+                <h2 class="actionName-clients">Registrar cliente</h2>
 
                  <div class="form-group">
                     <label for="idTypeClient-formClients">Tipo de Identificación</label>
@@ -43,7 +44,9 @@ export function renderClients() {
                 </div>
 
                 <div class="buttons-actions">
-                    <button type="submit" class="btn">Agregar</button>
+                    <button type="submit" class="btn" id="btnCreateClient" value="create">Agregar</button>
+                    <button type="submit" class="btn btnEditClient" value="edit">Guardar cambios</button>
+                    <button class="btn btnEditClient" id="dontSaveClient-btn">Cancelar</button>
                 </div>
             </form>
 
@@ -53,6 +56,7 @@ export function renderClients() {
                 
                 </div>
             </div>
-        </div>
+        </div>    
+    </section>
     `;
 }
