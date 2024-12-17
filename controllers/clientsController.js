@@ -54,7 +54,7 @@ export class ClientsController {
     // Inicializar eventos generales
     initEventListeners() {
         const form = document.querySelector('.form-client');
-        const searchBar = document.getElementById('search-bar'); // Corregido el ID del input de búsqueda
+        const searchBar = document.getElementById('search-bar-clients'); // Corregido el ID del input de búsqueda
 
         form.addEventListener('submit', (event) => {
             event.preventDefault();
@@ -132,6 +132,7 @@ export class ClientsController {
         const clients = loggedUser.getClients();
 
         const filteredClients = clients.filter(client => {
+
             const id = client.getId()?.toLowerCase() || '';
             const name = client.getName()?.toLowerCase() || '';
             const email = client.getEmail()?.toLowerCase() || '';

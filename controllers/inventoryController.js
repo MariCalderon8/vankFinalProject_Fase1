@@ -17,6 +17,7 @@ export class InventoryController {
         this.app.appContent.innerHTML = renderInventory();
         this.renderTable();
         this.initEventListeners();
+        this.hideEditButtons();
     }
 
     renderTable(products = this.userController.getLoggedUser().getInventory()) {
@@ -59,17 +60,50 @@ export class InventoryController {
         this.initEventListenersTable();
     }
 
+    hideEditButtons() {
+        const editButtons = document.querySelectorAll('.btnEditProduct');
+        const createButton = document.getElementById('btnCreateProduct');
+        const actionContent = document.getElementById('actionName-inventory');
+        actionContent.textContent = 'Agregar Producto';
+
+        createButton.style.visibility = "visible";
+
+        editButtons.forEach((button) => {
+            button.style.visibility = "hidden";
+        })
+    }
+
+    showEditButtons() {
+        const editButtons = document.querySelectorAll('.btnEditProduct');
+        const createButton = document.getElementById('btnCreateProduct');
+        const actionContent = document.getElementById('actionName-inventory');
+        actionContent.textContent = 'Editando Producto...';
+
+        createButton.style.visibility = "hidden";
+        editButtons.forEach((button) => {
+            button.style.visibility = "visible";
+        })
+    }
+
     // INICIALIZAR EVENTOS
 
     initEventListeners() {
         const form = document.querySelector('.form-product');
         const searchBar = document.getElementById('search-bar');
+        const cancelEditBtn = document.getElementById('dontSave-btn');
 
         // Maneja el envío del formulario
         form.addEventListener('submit', (event) => {
             event.preventDefault();
-            console.log("Formulario enviado");
-            this.handleCreateProduct();
+
+            const clickedButton = event.submitter; // Esta propiedad identifica cuál botón envió el formulario.
+            if (clickedButton.value === "create") {
+                console.log("Formulario enviado: Crear producto");
+                this.handleCreateProduct();
+            } else if (clickedButton.value === "edit") {
+                console.log("Formulario enviado: Editar producto");
+                this.handleUpdateProduct();
+            }
         });
 
         //Maneja la búsqueda
@@ -78,17 +112,24 @@ export class InventoryController {
             this.handleSearch(query);
             console.log("Buscando producto");
         })
+
+        cancelEditBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            this.clearFields();
+            this.hideEditButtons();
+        })
+
     }
 
     initEventListenersTable() {
-        const deleteButtons = document.querySelectorAll('.btn-delete'); 
+        const deleteButtons = document.querySelectorAll('.btn-delete');
         const infoButtons = document.querySelectorAll('.btn-info');
         const editButtons = document.querySelectorAll('.btn-edit');
 
         deleteButtons.forEach((button) => {
             const idProduct = button.getAttribute('data-id'); // Obtiene el ID del producto desde el atributo data-id
             button.addEventListener('click', () => {
-                this.deleteProduct(idProduct);
+                this.handleDeleteProduct(idProduct);
             });
         });
 
@@ -101,7 +142,7 @@ export class InventoryController {
 
         editButtons.forEach((button) => {
             const idProduct = button.getAttribute('data-id');
-            button.addEventListener('click', () =>{
+            button.addEventListener('click', () => {
                 this.handleEditProduct(idProduct);
             })
         })
@@ -147,7 +188,7 @@ export class InventoryController {
         this.renderTable();
     }
 
-    deleteProduct(idProduct) {
+    handleDeleteProduct(idProduct) {
         const loggedUser = this.userController.getLoggedUser();
         loggedUser.deletProduct(idProduct);
         this.userController.updateUser(loggedUser);
@@ -156,11 +197,11 @@ export class InventoryController {
         this.renderTable();
     }
 
-    showInfoProduct(idProduct){
+    showInfoProduct(idProduct) {
         const loggedUser = this.userController.getLoggedUser(); //Obtener el usaurio loggeado
         const product = loggedUser.getProductById(idProduct);//Buscar el producto por su ID
 
-    //En caso de algún error
+        //En caso de algún error
         if (!product) {
             alert(`No se encontró un producto con el código: ${idProduct}`);
             return;
@@ -204,66 +245,59 @@ export class InventoryController {
     }
 
     handleEditProduct(idProduct) {
+        this.showEditButtons();
         const loggedUser = this.userController.getLoggedUser();
         const product = loggedUser.getProductById(idProduct);
-        
+
         if (!product) {
             alert(`No se encontró producto con el código: ${idProduct}`);
             return;
         }
-    
+
         // Rellenar los campos con los datos del producto
         document.getElementById('idProduct-formInventory').value = product.getId(); // El código no se edita
+        document.getElementById('idProduct-formInventory').disabled = true; // Deshabilita el campo para editar el codigo
         document.getElementById('nameProduct-formInventory').value = product.getName();
         document.getElementById('categoryProduct-formInventory').value = product.getCategory();
         document.getElementById('descriptionProduct-formInventory').value = product.getDescription();
         document.getElementById('unitPriceProduct-formInventory').value = product.getUnitPrice();
         document.getElementById('salePriceProduct-formInventory').value = product.getSalePrice();
-    
-        const submitButton = document.querySelector('.form-product button[type="submit"]');
-        submitButton.textContent = 'Guardar cambios';    
-    
-        // Cambiar el evento de submit para actualizar el producto específico
-        this.handleUpdateProduct(idProduct);
+
     }
 
-    handleUpdateProduct(idProduct) {
-        const form = document.querySelector('.form-product');
-        
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-    
-            const name = document.getElementById('nameProduct-formInventory').value;
-            const category = document.getElementById('categoryProduct-formInventory').value;
-            const description = document.getElementById('descriptionProduct-formInventory').value;
-            const unitPrice = document.getElementById('unitPriceProduct-formInventory').value;
-            const salePrice = document.getElementById('salePriceProduct-formInventory').value;
-    
-            const loggedUser = this.userController.getLoggedUser();
-            const product = loggedUser.getProductById(idProduct);
-    
-            // Actualizar los campos del producto
-            product.setName(name);
-            product.setCategory(category);
-            product.setDescription(description);
-            product.setUnitPrice(unitPrice);
-            product.setSalePrice(salePrice);
-    
-            this.userController.updateUser(loggedUser); // Guardar los cambios
-    
-            alert('Producto actualizado correctamente');
-            this.renderTable();  // Volver a renderizar la tabla con los cambios
-            
-            // Limpiar el formulario y resetear el botón
-            this.clearFields();
-            
-            const submitButton = document.querySelector('.form-product button[type="submit"]');
-            submitButton.textContent = 'Agregar';
-        });
+    handleUpdateProduct() {
+        const idProduct = document.getElementById('idProduct-formInventory').value;
+        const name = document.getElementById('nameProduct-formInventory').value;
+        const category = document.getElementById('categoryProduct-formInventory').value;
+        const description = document.getElementById('descriptionProduct-formInventory').value;
+        const unitPrice = document.getElementById('unitPriceProduct-formInventory').value;
+        const salePrice = document.getElementById('salePriceProduct-formInventory').value;
+
+        const loggedUser = this.userController.getLoggedUser();
+        const product = loggedUser.getProductById(idProduct);
+
+        // Actualizar los campos del producto
+        product.setName(name);
+        product.setCategory(category);
+        product.setDescription(description);
+        product.setUnitPrice(unitPrice);
+        product.setSalePrice(salePrice);
+
+        this.userController.updateUser(loggedUser); // Guardar los cambios
+
+        alert('Producto actualizado correctamente');
+        this.renderTable();  // Volver a renderizar la tabla con los cambios
+
+        // Limpiar el formulario y resetear el botón
+        this.clearFields();
+        this.hideEditButtons();
+
     }
-    
+
 
     clearFields() {
+        document.getElementById('idProduct-formInventory').disabled = false;
+
         const form = document.querySelector('.form-product');
         form.reset();
     }

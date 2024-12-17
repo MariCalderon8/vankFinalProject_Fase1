@@ -16,6 +16,7 @@ export class Client{
         this.#address = address;
         this.#phone = phone; 
     }
+    
     // Convertir la instancia a un objeto JSON
     toJSON() {
         return {
@@ -88,7 +89,5 @@ export class Client{
 
     setPhone(phone) {
         this.#phone = phone;
-    }
-
-    
+    }
 }

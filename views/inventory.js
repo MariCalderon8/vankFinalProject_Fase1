@@ -1,10 +1,12 @@
 //Views/inventory.js
 export function renderInventory() {
     return `
-        <div class="form-inventory-container">
-
+        <section class="inventory-section">
+            <h2>Gestión de Inventario</h2>
+            <div class="form-inventory-container">
+                
                 <form class="form-product">
-                    <h2>Gestión de Inventario</h2>
+                    <h2 id="actionName-inventory">Agregar Producto</h2>
 
                     <div class="form-group">
                         <label for="idProduct-formInventory">Código</label>
@@ -37,18 +39,21 @@ export function renderInventory() {
                     </div>
 
                     <div class="buttons-actions">
-                        <button type="submit" class="btn">Agregar</button>
+                        <button type="submit" class="btn" id="btnCreateProduct" value="create">Agregar</button>
+                        <button type="submit" class="btn btnEditProduct" id="saveChanges-btn" value="edit">Guardar cambios</button>
+                        <button class="btn btnEditProduct" id="dontSave-btn">Cancelar</button>
                     </div>
 
                 </form>
 
-            <div class="search-container">
-                <input type="text" id="search-bar" class="search-bar" placeholder="Buscar por nombre, código o categoría">
-                <div class="tableInventory-container" id="tableInventory">
-            
+                <div class="search-container">
+                    <input type="text" id="search-bar" class="search-bar" placeholder="Buscar por nombre, código o categoría">
+                    <div class="tableInventory-container" id="tableInventory">
+                
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     `;
 }
 
