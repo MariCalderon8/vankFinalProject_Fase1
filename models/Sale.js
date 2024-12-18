@@ -1,3 +1,5 @@
+import { Product } from "./Product.js";
+
 //models/sale.js
 export class Sale {
     static saleCounter = 0;
@@ -52,7 +54,26 @@ export class Sale {
         this.#id = id;
     }
 
+    getTotal(){
+        return this.#products.reduce((total, detail) => total + detail.product.getSalePrice() * detail.amount, 0);
+    }
+
+    getSubtotalPerProduct(index){
+        const detail = this.#products[index];
+        if(detail){
+            return detail.product.getSalePrice() * detail.amount;
+        }else {
+            console.log('El producto no se encuentra');
+        }
+    }
+
     toJSON() {
+        let productsToJSON = this.#products;
+        productsToJSON.map(detail => ({ 
+            product: detail.product.toJSON(), // Convierte cada producto guardado a formato JSON
+            amount: detail.amount
+        }));
+
         return {
             id: this.#id,
             client: this.#client,
@@ -60,19 +81,27 @@ export class Sale {
             expirationDate: this.#expirationDate,
             paymentMethod: this.#paymentMethod,
             paymentWay: this.#paymentWay,
-            products: this.#products
+            products: productsToJSON
         };
     }
 
-    static fromJSONToSale(sale) {
+    static fromJSONToSale(json) {
         let newSale = new Sale(
-            sale.client, 
-            sale.expirationDate, 
-            sale.paymentMethod, 
-            sale.paymentWay, 
-            sale.products
+            json.client, 
+            json.expirationDate, 
+            json.paymentMethod, 
+            json.paymentWay, 
+            json.products
         )
-        newSale.setId(sale.id);
+        newSale.#id = json.id;
+
+        const products = json.products || [];
+        newSale.#products = products.map(detail => ({
+            product: Product.fromJSONtoProduct(detail.product),
+            amount: detail.amount
+        }))
+
+        
         return newSale;
     }
 }

@@ -179,7 +179,7 @@ export class User{
     // GESTIÓN HISTORIAL DE FACTURAS
 
     getSaleById(id) {
-        return this.#saleHistory.find(sale => sale.id == id);
+        return this.#saleHistory.find(sale => sale.getId() == id);;
     }
 
     addNewSale(sale) {

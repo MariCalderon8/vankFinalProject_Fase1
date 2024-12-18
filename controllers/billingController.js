@@ -3,6 +3,7 @@ import { App } from "../main.js";
 import { renderBilling } from "../views/billing.js";
 import { UserController } from "./usersController.js";
 import { Sale } from "../models/Sale.js";
+import { PdfService } from "../services/PDFService.js";
 
 export class BillingController{
 
@@ -12,6 +13,7 @@ export class BillingController{
         this.userController = new UserController();
         this.existingProducts = this.userController.getLoggedUser().getInventory();
         this.billProducts = []; 
+        this.pdfService = new PdfService();
 
         this.sortExistingProducts();
     }
@@ -26,7 +28,7 @@ export class BillingController{
 
         this.renderTableExistingProducts();
         this.renderTableBillProducts();
-        this.loadSalesHistory();
+        this.loadSalesHistory();     
     }
 
     renderTableExistingProducts(products = this.existingProducts){
@@ -47,6 +49,7 @@ export class BillingController{
 
 
         table.innerHTML = `
+
         <table>
                 <thead>
                 <tr>
@@ -279,7 +282,6 @@ export class BillingController{
             return;
         }
     
-        // Asegúrate de que el cliente está correctamente asignado
         const client = {
             id: clientId,
             name: clientName,
@@ -295,7 +297,7 @@ export class BillingController{
             paymentMethod,
             paymentWay,
             this.billProducts.map((detail) => ({
-                product: detail.product.toJSON(),
+                product: detail.product,
                 amount: detail.amount,
             }))
         );
@@ -324,6 +326,11 @@ export class BillingController{
         this.userController.updateUser(user);
         console.log(user);
     
+        // // Generar Pdf factura
+        this.handleGeneratePDF(sale, true);
+        
+        
+            
         alert("Factura generada con éxito.");
         
         this.clearFields();
@@ -355,10 +362,10 @@ export class BillingController{
         const user = this.userController.getLoggedUser();
         const sales = user.getSaleHistory();
 
+        console.log('Mostrando VENTAS');
         console.log(sales);
         
         const table = document.getElementById('table-salesHistory');
-        //console.log('Table element:', table);  // Debugging line
 
         // Función para formatear fechas de formato ISO a dd/mm/yyyy
         const formatDate = (date) => {
@@ -380,6 +387,7 @@ export class BillingController{
     
     
         let rows = sales.map(sale => {
+            console.log('Mostrando tabla');
             console.log(sale);
             return `
             <tr>
@@ -390,6 +398,7 @@ export class BillingController{
                 <td>${formatDate(sale.getExpirationDate())}</td>
                 <td>${sale.getPaymentWay() || 'Método de pago no disponible'}</td>
                 <td>
+                    <button type="button" class="btn-downloadBill" data-id="${sale.getId()}">Descargar</button>
                     <button type="button" class="btn-deleteSale" data-id="${sale.getId()}">Eliminar</button>
                 </td>
             </tr>
@@ -411,7 +420,7 @@ export class BillingController{
                     </tr>
                 </thead>
                 <tbody>
-                    ${rows || '<tr><td colspan="6">No se encontraron ventas</td></tr>'}
+                    ${rows || '<tr><td colspan="7">No se encontraron ventas</td></tr>'}
                 </tbody>
             </table>
             `;
@@ -420,15 +429,28 @@ export class BillingController{
         this.initEventsListenersTableSalesHistory();
     }
     
-    
+
     initEventsListenersTableSalesHistory() {
+        const user = this.userController.getLoggedUser();
         const btnDeleteSale = document.querySelectorAll('.btn-deleteSale');
         btnDeleteSale.forEach((button) => {
             const saleId = button.getAttribute('data-id');
-            button.addEventListener('click', () => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
                 this.handleDeleteSale(saleId);
             });
         });
+
+        const btnDownloadBill = document.querySelectorAll('.btn-downloadBill');
+        btnDownloadBill.forEach((button) => {
+            const saleId = parseInt(button.getAttribute('data-id'));
+            const sale = user.getSaleById(saleId);
+
+            button.addEventListener('click',  () => {
+                this.handleGeneratePDF(sale, false);
+            });
+        });
+
     }
     
     handleDeleteSale(saleId) {
@@ -457,17 +479,9 @@ export class BillingController{
         }
     }
     
-    handleGeneratePDF(saleId) {
-        const user = this.userController.getLoggedUser();
-        const sales = user.getSaleHistory();
-    
-        const sale = sales.find(sale => sale.getId() === saleId);
-        if (!sale) {
-            alert("Factura no encontrada.");
-            return;
-        }
-    
-        generatePDF(sale);
+    handleGeneratePDF(sale, openInNewWindow = false) {
+        const pdfContent = this.pdfService.generateBillHtmlFormat(sale);
+        this.pdfService.generatePdf(pdfContent, sale, openInNewWindow,);
     }
 
     clearFields() {

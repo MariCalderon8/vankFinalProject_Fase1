@@ -5,7 +5,7 @@
     box-shadow: 0px 2px 5px #007BFF;
 }
 
-h2 {
+.container-billingForm h2 {
     text-align: center;
     margin-bottom: 20px;
 }
@@ -79,7 +79,7 @@ select {
     font-size: 16px;
 }
 
-button:hover {
+.btnCreateBill:hover, .cancelBill:hover {
     background-color: #0056b3;
 }
 
@@ -95,16 +95,12 @@ button:hover {
 }
 
 #sales-history button {
-    background-color: red;
-    color: white;
     padding: 5px;
     border: none;
     cursor: pointer;
 }
 
-#sales-history button:hover {
-    background-color: darkred;
-}
+
 
 
 #table-salesHistory table {
@@ -130,14 +126,27 @@ button:hover {
 }
 
 #table-salesHistory button {
-    background-color: red;
-    color: white;
     padding: 5px 10px;
     border: none;
     cursor: pointer;
     border-radius: 3px;
 }
 
-#table-salesHistory button:hover {
+.btn-deleteSale:hover {
     background-color: darkred;
 }
+
+.btn-downloadBill:hover {
+    background-color: #aa7f22;
+}
+
+.btn-deleteSale {
+    background-color: red;
+    color: white;
+}
+
+.btn-downloadBill {
+    background-color:#f3b226;
+    color:  black;
+}
+
