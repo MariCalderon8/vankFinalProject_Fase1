@@ -110,7 +110,7 @@ export class InventoryController {
         searchBar.addEventListener('input', (event) => {
             const query = event.target.value.toLowerCase();
             this.handleSearch(query);
-            console.log("Buscando producto");
+            console.log("Buscando producto"); 
         })
 
         cancelEditBtn.addEventListener('click', (event) => {

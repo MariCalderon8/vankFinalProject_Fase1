@@ -1,63 +1,13 @@
-body, html {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-header {
-    background-color: #333;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-}
-
-nav {
-    background-color: #f2f2f2;
-    padding: 0.5rem;
-}
-
-nav ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-}
-
-nav ul li {
-    margin: 0 1rem;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: #333;
-}
-
-main {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 1rem;
-}
-
 #chatbox {
+    min-height: 65vh;
+    max-height: 80vh;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     background-color: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
-    margin: 1rem;
+    margin: 1rem 5rem;
     overflow: hidden;
 }
 
@@ -143,15 +93,6 @@ footer {
 }
 
 @media (max-width: 600px) {
-    nav ul {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    nav ul li {
-        margin: 0.5rem 0;
-    }
-
     #chatbox {
         margin: 0.5rem;
     }

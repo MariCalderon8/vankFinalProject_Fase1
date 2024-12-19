@@ -388,7 +388,7 @@ export class BillingController{
     
         let rows = sales.map(sale => {
             console.log('Mostrando tabla');
-            console.log(sale);
+            console.log(sale.toJSON());
             return `
             <tr>
                 <td>${sale.getId() || 'ID no disponible'}</td>

@@ -57,3 +57,6 @@ export function renderInventory() {
     `;
 }
 
+
+
+// <button id="close">&times;</button>
