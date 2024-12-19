@@ -1,6 +1,7 @@
 //controllers/inventoryController.js
 import { App } from "../main.js";
 import { Product } from "../models/Product.js";
+import { GraphicsService } from "../services/graphicsService.js";
 import { renderInventory } from "../views/inventory.js";
 import { UserController } from "./usersController.js";
 
@@ -9,6 +10,7 @@ export class InventoryController {
     constructor() {
         this.app = App.getInstance();
         this.userController = new UserController();
+        this.graphicService = new GraphicsService();
     }
 
     // RENDERIZAR COMPONENTES
@@ -110,7 +112,7 @@ export class InventoryController {
         searchBar.addEventListener('input', (event) => {
             const query = event.target.value.toLowerCase();
             this.handleSearch(query);
-            console.log("Buscando producto"); 
+            console.log("Buscando producto");
         })
 
         cancelEditBtn.addEventListener('click', (event) => {
@@ -136,7 +138,7 @@ export class InventoryController {
         infoButtons.forEach((button) => {
             const idProduct = button.getAttribute('data-id'); // Obtiene el ID del producto desde el atributo data-id
             button.addEventListener('click', () => {
-                this.showInfoProduct(idProduct);
+                this.showModalInfo(idProduct);
             });
         });
 
@@ -195,20 +197,6 @@ export class InventoryController {
 
         alert('Producto Eliminado correctamente');
         this.renderTable();
-    }
-
-    showInfoProduct(idProduct) {
-        const loggedUser = this.userController.getLoggedUser(); //Obtener el usaurio loggeado
-        const product = loggedUser.getProductById(idProduct);//Buscar el producto por su ID
-
-        //En caso de algún error
-        if (!product) {
-            alert(`No se encontró un producto con el código: ${idProduct}`);
-            return;
-        }
-
-        //Alert que muestra la descripción
-        alert(`DESCRIPCIÓN DEL PRODUCTO CON CÓDIGO ${idProduct}:\n\n${product.getDescription()}`);
     }
 
     handleSearch(findProduct) {
@@ -300,5 +288,125 @@ export class InventoryController {
 
         const form = document.querySelector('.form-product');
         form.reset();
+    }
+
+
+    // MODAL
+    showModalInfo(idProduct) {
+        const loggedUser = this.userController.getLoggedUser(); //Obtener el usaurio loggeado
+        const product = loggedUser.getProductById(idProduct);//Buscar el producto por su ID
+
+        //En caso de algún error
+        if (!product) {
+            alert(`No se encontró un producto con el código: ${idProduct}`);
+            return;
+        }
+        this.renderModal(product, loggedUser);
+    }
+
+    renderModal(product, user) {
+        const modal = document.getElementById('productModal');
+        modal.innerHTML = `
+        <div class="modal-body" id="productModal">
+            <div class="modal-container">
+                <button class="close-button">&times;</button>
+
+                <div class="modal-header">
+                    <h2 class="product-title">Detalles del Producto</h2>
+                    <span class="badge badge-success">Top Vendido</span>
+                </div>
+
+                <div class="modal-productDetails">
+                    <div class="detail-group">
+                        <span class="detail-label">Código del Producto</span>
+                        <span class="detail-value">${product.getId()}</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Precio Unitario</span>
+                        <span class="detail-value">$${product.getUnitPrice()}</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Nombre del Producto</span>
+                        <span class="detail-value">${product.getName()}</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Precio de Venta</span>
+                        <span class="detail-value">$${product.getSalePrice()}</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Categoría</span>
+                        <span class="detail-value">${product.getCategory()}</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Descripción</span>
+                        <p class="detail-value">${product.getDescription()}</p>
+                    </div>
+                    
+                </div>
+
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-title">Ventas Totales</div>
+                        <div class="stat-value">$${user.getTotalSalesByProduct(product.getId())}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Unidades Vendidas</div>
+                        <div class="stat-value">${user.getSoldUnitsByProduct(product.getId())}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Margen de Ganancia</div>
+                        <div class="stat-value">${product.getProfitMargin()}%</div>
+                    </div>
+                </div>
+                <h2>(GRAFICAS PENDIENTES)</h2>
+                <div class="charts-container">
+                
+                    <div class="chart-box">
+                        <h3 class="chart-title">Ventas Mensuales (No se qué poner aquí, aiuda)</h3>
+                        <canvas class="chart-canvas" id="barChart"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <h3 class="chart-title">Distribución de Ventas</h3>
+                        <canvas class="chart-canvas" id="pieChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="additional-info">
+                    <h3 class="info-title">Consejos (PENDIENTE) </h3>
+                    <div class="info-content">
+                        <p>Este producto ha mostrado un rendimiento excepcional en el último trimestre, superando las
+                            expectativas de ventas en un 25%. Es particularmente popular en la región norte, donde
+                            representa el 45% de todas las ventas de su categoría.
+                        </p>
+                        <span>Le recordamos que esta información ha sido generada usando el modelo gemini-1.5-flash</span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        `
+        const closeBtn = document.querySelector('.close-button');
+        closeBtn.addEventListener('click', () => {
+            this.closeModal();
+        });
+        this.createModalCharts();
+    }
+
+    createModalCharts(){
+        const pieGraphic = document.getElementById('pieChart');
+        const barGraphic = document.getElementById('barChart');
+
+        // Datos de prueba
+        const labels = ["Dato 1", "Dato 2", "Dato 3"]
+        const data = [50, 40, 10]
+
+        this.graphicService.createBarGraphic(barGraphic, 'Ventas por mes', labels, data);
+        this.graphicService.createPieGraphic(pieGraphic, 'Porcentaje ganancias', labels, data);
+
+    }
+
+    closeModal(){
+        const modal = document.getElementById('productModal');
+        modal.innerHTML = ''
     }
 }

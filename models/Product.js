@@ -83,4 +83,8 @@ export class Product{
         this.#salePrice = value;
     }
 
+    getProfitMargin(){
+        return ((this.#salePrice - this.#unitPrice) / this.#salePrice) * 100
+    }
+
 }

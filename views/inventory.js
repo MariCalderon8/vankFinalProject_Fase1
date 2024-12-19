@@ -3,6 +3,11 @@ export function renderInventory() {
     return `
         <section class="inventory-section">
             <h2>Gestión de Inventario</h2>
+
+            <div id="productModal">
+                    
+            </div>
+
             <div class="form-inventory-container">
                 
                 <form class="form-product">

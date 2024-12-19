@@ -214,7 +214,30 @@ export class User{
         const index = this.#clients.findIndex(client => client.getId() === id);
         if (index !== -1) {
             this.#clients.splice(index, 1);  // Elimina el cliente
-        }
-    }
-    
+        }
+    }
+
+    getSoldUnitsByProduct(idProduct){
+        return this.#saleHistory.reduce((total, sale) =>{
+            sale.getProducts().forEach(detail => {
+                if(detail.product.getId() == idProduct){
+                    total += detail.amount
+                }
+            });
+            return total;
+        }, 0);
+    }
+
+    getTotalSalesByProduct(idProduct){
+        return this.#saleHistory.reduce((total, sale) =>{
+            sale.getProducts().forEach(detail => {
+                if(detail.product.getId() == idProduct){
+                    total += (detail.amount * detail.product.getSalePrice());
+                    
+                }
+                console.log(total);
+            });
+            return total;
+        }, 0);
+    }
 }
