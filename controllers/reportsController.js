@@ -32,6 +32,7 @@ export class ReportsController{
 
     async handlePromptSend(){
         const chatMessages = document.getElementById('chat-messages');
+        const chatBody = document.getElementById('chat-body');
         let prompt = document.getElementById('chat-input').value;
         if(prompt == ''){
             alert('Por favor ingrese un mensaje');
@@ -52,6 +53,7 @@ export class ReportsController{
         chatMessages.appendChild(iaMessage);
 
         document.getElementById('chat-input').value = '';
+        chatBody.scrollTop = chatBody.scrollHeight;
     }
 
 }
