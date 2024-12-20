@@ -1,6 +1,7 @@
 //controllers/inventoryController.js
 import { App } from "../main.js";
 import { Product } from "../models/Product.js";
+import { AiService } from "../services/AiService.js";
 import { GraphicsService } from "../services/graphicsService.js";
 import { renderInventory } from "../views/inventory.js";
 import { UserController } from "./usersController.js";
@@ -10,7 +11,9 @@ export class InventoryController {
     constructor() {
         this.app = App.getInstance();
         this.userController = new UserController();
+
         this.graphicService = new GraphicsService();
+        this.aiService = new AiService();
     }
 
     // RENDERIZAR COMPONENTES
@@ -301,10 +304,12 @@ export class InventoryController {
             alert(`No se encontró un producto con el código: ${idProduct}`);
             return;
         }
-        this.renderModal(product, loggedUser);
+        this.renderModal(product);
     }
 
-    renderModal(product, user) {
+    async renderModal(product) {
+        const user = this.userController.getLoggedUser();
+        const iaResponse = await this.aiService.generateProductAnalysis(product.getId())
         const modal = document.getElementById('productModal');
         modal.innerHTML = `
         <div class="modal-body" id="productModal">
@@ -372,13 +377,10 @@ export class InventoryController {
                 </div>
 
                 <div class="additional-info">
-                    <h3 class="info-title">Consejos (PENDIENTE) </h3>
+                    <h3 class="info-title">Análisis de producto</h3>
                     <div class="info-content">
-                        <p>Este producto ha mostrado un rendimiento excepcional en el último trimestre, superando las
-                            expectativas de ventas en un 25%. Es particularmente popular en la región norte, donde
-                            representa el 45% de todas las ventas de su categoría.
-                        </p>
-                        <span>Le recordamos que esta información ha sido generada usando el modelo gemini-1.5-flash</span>
+                        <p>${iaResponse}</p>
+                        <span>Le recordamos que el análisis del producto ha sido generado usando el modelo gemini-1.5-flash</span>
 
                     </div>
                 </div>
@@ -389,19 +391,26 @@ export class InventoryController {
         closeBtn.addEventListener('click', () => {
             this.closeModal();
         });
-        this.createModalCharts();
+        this.createModalCharts(product, user);
     }
 
-    createModalCharts(){
+    createModalCharts(product, user){
         const pieGraphic = document.getElementById('pieChart');
         const barGraphic = document.getElementById('barChart');
 
-        // Datos de prueba
-        const labels = ["Dato 1", "Dato 2", "Dato 3"]
-        const data = [50, 40, 10]
+        // Datos torta
+        const productTotalProfit = user.getProfitPercentByProduct(product.getId());
+        const labelsPie = [`Ganancias del producto (ID:${product.getId()})`, "Ganancia total"]
+        const dataPie = [productTotalProfit, (100 - productTotalProfit)]
 
-        this.graphicService.createBarGraphic(barGraphic, 'Ventas por mes', labels, data);
-        this.graphicService.createPieGraphic(pieGraphic, 'Porcentaje ganancias', labels, data);
+        // Datos diagrama de barra
+        const labelsBar = ["Dato 1", "Dato 2", "Dato 3"];
+        const dataBar = [50, 40, 10]
+
+        
+
+        this.graphicService.createBarGraphic(barGraphic, 'Ventas por mes', labelsBar, dataBar);
+        this.graphicService.createPieGraphic(pieGraphic, 'Porcentaje ganancias', labelsPie, dataPie);
 
     }
 

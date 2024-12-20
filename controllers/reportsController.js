@@ -12,6 +12,7 @@ export class ReportsController{
     render(){
         this.app.appContent.innerHTML = renderReports();
         this.initEventListeners();
+        this.aiService.initChat();
     }
 
     initEventListeners(){
@@ -38,8 +39,8 @@ export class ReportsController{
             alert('Por favor ingrese un mensaje');
         }
 
-        const iaResponse = await this.aiService.getIaResponse(prompt);
-
+        const iaResponse = await this.aiService.generateChatResponse(prompt);
+        console.log(iaResponse)
         const userMessage = document.createElement('div');
         userMessage.textContent = prompt;
         userMessage.classList.add('message');

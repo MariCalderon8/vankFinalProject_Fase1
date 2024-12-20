@@ -217,6 +217,34 @@ export class User{
         }
     }
 
+
+    // ESTADÍSITCAS 
+
+    // General
+
+    getTotalSales(){
+        return this.#saleHistory.reduce((total, sale) =>{
+            sale.getProducts().forEach(detail => {
+                total += (detail.amount * detail.product.getSalePrice());
+            });
+            return total;
+        }, 0);
+    }
+
+    getTotalProfit(){
+        const result = this.#saleHistory.reduce((total, sale) =>{
+            sale.getProducts().forEach(detail => {
+                total += (detail.amount * (detail.product.getSalePrice() - detail.product.getUnitPrice()));
+            });
+            return total;
+        }, 0);
+        console.log();(`Ganancia Total: ${result}`)
+        return result
+    }
+
+
+    // By product
+
     getSoldUnitsByProduct(idProduct){
         return this.#saleHistory.reduce((total, sale) =>{
             sale.getProducts().forEach(detail => {
@@ -239,5 +267,26 @@ export class User{
             });
             return total;
         }, 0);
+    }
+
+    getTotalProfitByProduct(idProduct){
+        let total = this.#saleHistory.reduce((total, sale) =>{
+            sale.getProducts().forEach(detail => {
+                if(detail.product.getId() == idProduct){
+                    console.log(detail.product.getSalePrice());
+                    console.log(detail.product.getUnitPrice());
+                    total += (detail.amount * (detail.product.getSalePrice() - detail.product.getUnitPrice()));
+                }
+            });
+            return total;
+        }, 0);
+        console.log(`Ganancia del producto: ${total}`);
+        return total
+    }
+
+    getProfitPercentByProduct(idPrduct){
+        let result = (this.getTotalProfitByProduct(idPrduct) * 100 / this.getTotalProfit()).toFixed(2);
+        console.log(`Porcentaje: ${result}`);
+        return result;
     }
 }
