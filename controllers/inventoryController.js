@@ -26,7 +26,6 @@ export class InventoryController {
     }
 
     renderTable(products = this.userController.getLoggedUser().getInventory()) {
-        console.log(products);
         const table = document.getElementById('tableInventory');
         let rows = products.map((product, i) =>
             `<tr>
@@ -103,10 +102,8 @@ export class InventoryController {
 
             const clickedButton = event.submitter; // Esta propiedad identifica cuál botón envió el formulario.
             if (clickedButton.value === "create") {
-                console.log("Formulario enviado: Crear producto");
                 this.handleCreateProduct();
             } else if (clickedButton.value === "edit") {
-                console.log("Formulario enviado: Editar producto");
                 this.handleUpdateProduct();
             }
         });
@@ -115,7 +112,6 @@ export class InventoryController {
         searchBar.addEventListener('input', (event) => {
             const query = event.target.value.toLowerCase();
             this.handleSearch(query);
-            console.log("Buscando producto");
         })
 
         cancelEditBtn.addEventListener('click', (event) => {
@@ -190,7 +186,6 @@ export class InventoryController {
 
         user.addNewProduct(product.toJSON()); // Anñadir nuevo producto
         this.userController.updateUser(user); // Actualizar la lista de usuarios en el localStorage
-        console.log('Producto creado correctamente');
         alert('Producto creado correctamente');
 
         // Limpia el formulario
@@ -407,7 +402,6 @@ export class InventoryController {
 
     showBadge(product, user){
         const badgeComponent = document.querySelector('.badge');
-        console.log(user.isBestSellingProduct(product));
         if(user.isBestSellingProduct(product)){
             badgeComponent.classList.add('badge-success')
             badgeComponent.textContent = 'Top ventas'

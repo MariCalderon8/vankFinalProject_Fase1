@@ -20,27 +20,22 @@ export class RegisterController{
         // Maneja el envío del formulario
         form.addEventListener('submit', (event) => {
             event.preventDefault(); 
-            console.log("Formulario enviado");
             this.handleRegister();  
         });
 
         // Maneja el botón de cancelar
         cancelButton.addEventListener('click', () => {
-            console.log("Botón de cancelar presionado");
             this.app.renderView('home');  
         });
 
         // Maneja el enlace "Iniciar sesión"
         loginLink.addEventListener('click', (event) => {
             event.preventDefault();
-            console.log("Enlace 'Iniciar sesión' presionado");
             this.app.renderView('login');
         });
     }
 
     handleRegister() {
-        console.log("Procesando el registro...");
-
          // Obtener los valores del formulario
          const name = document.getElementById('name-register').value;
          const idType = document.getElementById('idType-register').value;

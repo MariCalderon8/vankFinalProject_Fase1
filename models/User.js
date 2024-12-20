@@ -65,7 +65,6 @@ export class User {
 
         const saleHistory = json.saleHistory || [];
         user.#saleHistory = saleHistory.map(sale => Sale.fromJSONToSale(sale));
-        console.log(saleHistory);
 
         const clients = json.clients || [];
         user.#clients = clients.map(client => Client.fromJSONToClient(client));
@@ -173,7 +172,6 @@ export class User {
             return;
         }
         this.#inventory.splice(index, 1); // Elimina el producto
-        console.log(`Producto con ID ${id} eliminado correctamente`);
     }
 
     // GESTIÓN HISTORIAL DE FACTURAS
@@ -185,7 +183,6 @@ export class User {
     addNewSale(sale) {
         this.#billNum++;
         sale.setId(this.#billNum);
-        console.log(`Antes de agregar: ${sale.getId()} ${sale.getExpirationDate()}`);
         this.#saleHistory.push(sale.toJSON());
     }
 
@@ -238,7 +235,6 @@ export class User {
             });
             return total;
         }, 0);
-        console.log(); (`Ganancia Total: ${result}`)
         return result
     }
 
@@ -287,10 +283,7 @@ export class User {
             sale.getProducts().forEach(detail => {
                 if (detail.product.getId() == idProduct) {
                     total += (detail.amount * detail.product.getSalePrice());
-                    console.log('Dentro de user ventas');
-                    console.log(total);
                 }
-                console.log(total);
             });
             return total;
         }, 0);
@@ -300,20 +293,16 @@ export class User {
         let total = this.#saleHistory.reduce((total, sale) => {
             sale.getProducts().forEach(detail => {
                 if (detail.product.getId() == idProduct) {
-                    console.log(detail.product.getSalePrice());
-                    console.log(detail.product.getUnitPrice());
                     total += (detail.amount * (detail.product.getSalePrice() - detail.product.getUnitPrice()));
                 }
             });
             return total;
         }, 0);
-        console.log(`Ganancia del producto: ${total}`);
         return total
     }
 
     getProfitPercentByProduct(idPrduct) {
         let result = (this.getTotalProfitByProduct(idPrduct) * 100 / this.getTotalProfit()).toFixed(2);
-        console.log(`Porcentaje: ${result}`);
         return result;
     }
 
@@ -325,7 +314,6 @@ export class User {
                 const unitsSold = this.getSoldUnitsByProduct(currentProduct.getId());
                 if (unitsSold > topSale.unitsSold) {
                     topSale = { product: currentProduct, unitsSold: unitsSold }
-                    console.log(topSale);
                 }
             })
 
@@ -370,7 +358,6 @@ export class User {
 
         // Calcular días en el mes
         const daysInMonth = new Date(new Date().getFullYear(), month, 0).getDate();
-        console.log(daysInMonth);
         const profits = Array(daysInMonth).fill(0);
         const currentDate = new Date();
         this.#saleHistory.forEach(sale => {

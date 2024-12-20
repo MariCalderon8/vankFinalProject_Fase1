@@ -189,7 +189,6 @@ export class PdfService {
     }
 
     generatePdfBill(pdfContent, sale, openInNewWindow = false){
-        console.log('ENTRO AL MÉTODO DE FACTURA');
         const content = document.createElement('div');
         content.innerHTML = pdfContent;
         document.body.appendChild(content);
@@ -240,10 +239,8 @@ export class PdfService {
                 // Abrir PDF en una nueva ventana
                 const pdfBlobUrl = pdf.output('bloburl');
                 window.open(pdfBlobUrl, '_blank');
-                console.log('En otra ventan');
             } else {
                 // Descargar PDF
-                console.log('Descargar');
                 pdf.save(`${fileName}.pdf`);
             }
 

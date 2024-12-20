@@ -84,7 +84,6 @@ export class Product{
     }
 
     getProfitMargin(){
-        console.log(`GANANCIA DESDE PRODUCTO: ${this.#salePrice - this.#unitPrice} `);
         return (((this.#salePrice - this.#unitPrice) / this.#salePrice) * 100).toFixed(2); 
     }
 

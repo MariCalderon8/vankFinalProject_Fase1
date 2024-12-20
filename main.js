@@ -52,7 +52,6 @@ export class App {
         }
 
         this.#initEventListeners();
-        console.log(`IsLogged: ${this.isLogged()}`);
     }
 
     // Inicializa los event listeners de la barra de navegación
@@ -61,7 +60,6 @@ export class App {
         this.navButtons.forEach(btn => {
             btn.addEventListener('click', (event) => {
                 const view = event.target.dataset.view;
-                console.log("Cambiar a vista:", view);
                 this.renderView(view);
             });
         });
@@ -73,7 +71,6 @@ export class App {
             this.logoutBtn.addEventListener('click', (event) =>{
                 const view = event.target.dataset.view;
                 this.#logout();
-                console.log("Cambiar a vista:", view);
                 this.renderView(view);
             })
 
@@ -93,7 +90,6 @@ export class App {
 
     renderView(viewName) {
         this.#showNavbar();
-        console.log("Renderizando vista:", viewName); // Verificar si llega hasta aquí
         this.appContent.innerHTML = ''; // Limpia el contenido actual
 
         switch (viewName) {
@@ -102,12 +98,10 @@ export class App {
                 break;
 
             case 'login':
-                console.log("Renderizando Login");
                 this.currentController = new LoginController();
                 break;
 
             case 'register':
-                console.log("Renderizando Register");
                 this.currentController = new RegisterController();
                 break;
 
@@ -128,7 +122,6 @@ export class App {
                 break;
 
             default:
-                console.log("Renderizando Home por defecto");
                 this.currentController = new HomeController();
                 break;
         }
@@ -139,7 +132,6 @@ export class App {
 
 // Inicializamos la aplicación
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Iniciando APP");
     const app = App.getInstance();
     app.renderView('home');
 });

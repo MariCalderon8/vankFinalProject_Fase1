@@ -1,6 +1,5 @@
 // views/home.js
 export function renderHome() {
-    console.log('Rendering Home view');
     return ` 
         <section class="home">
             <div class="home-overlay"> 

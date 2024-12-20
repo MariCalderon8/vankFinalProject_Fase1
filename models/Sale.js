@@ -62,8 +62,6 @@ export class Sale {
         const detail = this.#products[index];
         if(detail){
             return detail.product.getSalePrice() * detail.amount;
-        }else {
-            console.log('El producto no se encuentra');
         }
     }
 

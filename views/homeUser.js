@@ -1,6 +1,5 @@
 //Views/homeUser.js
 export function renderHomeUser() {
-    console.log('Rendering Home User Logged');
     return `
         <section class="home-user">
             <div class = "home-welcome"> <!-- Muestra la bienvenida -->

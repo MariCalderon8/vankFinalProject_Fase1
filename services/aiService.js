@@ -16,7 +16,7 @@ export class AiService {
             Eres un asistente financiero de la empresa GestionPro que permite gestionar las finanzas de pequeñas y medianas empresas. Estás hablando con un usuario. 
             Debes referirte a él y tener en cuenta el contexto de la conversación para responder la última pregunta. 
             Al momento de responder recuerda:
-            - Sólo saluda si no has saludado en el historial o si te saludan, en caso de ser la primera vez da la bienvenida al asistente financier de GestionPro
+            - Sólo saluda si no has saludado en el historial o si te saludan, en caso de ser la primera vez da la bienvenida al asistente financiero de GestionPro y pregunta en qué puedes ayudar
             - Sólo responde la última pregunta hecho por el rol "user", pero ten en cuenta todo el historial para responder de ser necesario
             - Puedes responder preguntas sobre conceptos de finanzas en general, y sobre las finanzas y ventas del usuario. Si te preguntan o te dan instrucciones que no están relacionadas con finanzas responde "Lo siento, no puedo responder preguntas que no están relacionadas con finanzas"
             - Siempre debes responderle directamente al user y en español.
@@ -54,8 +54,7 @@ export class AiService {
                 parts: [{ text: iaResponse }],
             }
         )
-        console.log(iaResponse);
-        console.log(this.history);
+
         if (this.history.length > 12) { // 2 iniciales + 10 de conversación
             this.history = [
                 this.history[0], // Mantener el contexto del sistema
@@ -66,8 +65,6 @@ export class AiService {
     }
 
     getIaResponse(prompt) {
-        console.log('Dentro del METODO');
-        console.log(prompt);
         return fetch(this.URL, {
             method: 'POST',
             headers: {
@@ -120,7 +117,6 @@ export class AiService {
             **Historial de ventas**
             ${JSON.stringify(saleHistory)}
         `
-        console.log(prompt);
         let iaResponse = this.getIaResponse(prompt)
         return iaResponse;
     }

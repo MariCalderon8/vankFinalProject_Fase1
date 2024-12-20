@@ -40,7 +40,6 @@ export class ReportsController{
         }
 
         const iaResponse = await this.aiService.generateChatResponse(prompt);
-        console.log(iaResponse)
         const userMessage = document.createElement('div');
         userMessage.textContent = prompt;
         userMessage.classList.add('message');

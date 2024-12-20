@@ -26,7 +26,6 @@ export class BillingController{
         const today = new Date().toLocaleDateString('en-CA');
         issueDataInput.value = today;
         document.getElementById('fecha-emision').disabled = true;
-        console.log(today);
 
         this.renderTableExistingProducts();
         this.renderTableBillProducts();
@@ -128,7 +127,6 @@ export class BillingController{
         searchBar.addEventListener('input', (event) => {
             const query = event.target.value.toLowerCase();
             this.handleSearch(query);
-            console.log("Buscando producto");
         })
 
         cancelBill.addEventListener('click', (event) => {
@@ -239,7 +237,6 @@ export class BillingController{
                     productDetail.amount = parseInt(productAmount[i].value);
                 }
                 
-                console.log(i);
             })
         }
     }
@@ -258,7 +255,6 @@ export class BillingController{
         const user = this.userController.getLoggedUser();
         const clientExists = user.getClientById(clientId);
         
-        console.log("Cliente existente: ",clientExists);
         if (!clientExists) {
             alert('El cliente no existe en la tienda. No se puede crear la factura.');
             return;
@@ -310,28 +306,11 @@ export class BillingController{
         );
 
     
-        // Console log para depuración con la información de la factura
-        console.log("Factura generada:", {
-            client: client, // Verifica que el cliente esté correctamente asignado
-            issueDate: issueDate,
-            expirationDate: expirationDate,
-            paymentMethod: paymentMethod,
-            paymentWay: paymentWay,
-            products: this.billProducts.map(detail => ({
-                productId: detail.product.getId(),
-                productName: detail.product.getName(),
-                productPrice: detail.product.getSalePrice(),
-                amount: detail.amount
-            
-            }))
-            
-        });
     
         // Guardar la factura en el usuario
         
         user.addNewSale(sale);
         this.userController.updateUser(user);
-        console.log(user);
     
         // // Generar Pdf factura
         this.handleGeneratePDF(sale, true);
@@ -345,11 +324,9 @@ export class BillingController{
     
     handleSearchClientById(clientId){
         const user = this.userController.getLoggedUser();
-        console.log("Clientes del usuario:", user.getClients());
         const client = user.getClients().find((client) => 
             client.getId().toString().trim().toLowerCase() === clientId.toString().trim().toLowerCase()
         );
-        console.log("Cliente buscado:", clientId, "Resultado:", client);
 
         const nameInput = document.getElementById('nombre');
         const emailInput = document.getElementById('correo');
@@ -365,12 +342,8 @@ export class BillingController{
     }
 
     loadSalesHistory() {
-        console.log('load Table');
         const user = this.userController.getLoggedUser();
         const sales = user.getSaleHistory();
-
-        console.log('Mostrando VENTAS');
-        console.log(sales);
         
         const table = document.getElementById('table-salesHistory');
 
@@ -394,8 +367,6 @@ export class BillingController{
     
     
         let rows = sales.map(sale => {
-            console.log('Mostrando tabla');
-            console.log(sale.toJSON());
             return `
             <tr>
                 <td>${sale.getId() || 'ID no disponible'}</td>
@@ -404,7 +375,7 @@ export class BillingController{
                 <td>${formatDate(sale.getIssueDate())}</td>
                 <td>${formatDate(sale.getExpirationDate())}</td>
                 <td>${sale.getPaymentWay() || 'Método de pago no disponible'}</td>
-                <td>
+                <td class="tablesales-actions">
                     <button type="button" class="btn-downloadBill" data-id="${sale.getId()}">Descargar</button>
                     <button type="button" class="btn-deleteSale" data-id="${sale.getId()}">Eliminar</button>
                 </td>
@@ -461,16 +432,10 @@ export class BillingController{
     }
     
     handleDeleteSale(saleId) {
-        console.log("ID de la venta a eliminar:", saleId);
         const user = this.userController.getLoggedUser();
         const sales = user.getSaleHistory();
     
-        // Validación de ventas
-        console.log("Ventas disponibles:", sales);
-        sales.forEach((sale, index) => {
-            console.log(`Venta #${index}:`, sale, "ID:", sale.getId());
-        });
-    
+
         const saleIndex = sales.findIndex(sale => { 
             const id = sale.getId();
             return id && id.toString() === saleId.toString();

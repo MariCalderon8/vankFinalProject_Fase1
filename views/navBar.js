@@ -1,5 +1,4 @@
 export function renderNavbar() {
-    console.log('Render Navbar');
     return `
     <nav class="navbar">
         <div class="nav-logo" data-view="home">

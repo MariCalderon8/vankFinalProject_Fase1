@@ -137,7 +137,8 @@ select {
     padding: 10px;
     text-align: left;
     border: 1px solid #007bff;
-}
+    max-width: 180px;
+    overflow-wrap: break-word;}
 
 #sales-history button {
     padding: 5px;
@@ -148,6 +149,10 @@ select {
 .table-salesHistory {
     max-height: 500px; /* Altura máxima para scroll vertical */
     overflow: auto;    /* Activa la barra de desplazamiento */
+}
+
+.tablesales-actions {
+    min-width: 160px;
 }
 
 #table-salesHistory table {

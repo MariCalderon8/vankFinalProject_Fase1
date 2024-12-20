@@ -88,10 +88,8 @@ export class ClientsController {
 
             const clickedButton = event.submitter; // Esta propiedad identifica cuál botón envió el formulario.
             if (clickedButton.value === "create") {
-                console.log("Formulario enviado: Crear cliente");
                 this.handleCreateClient();
             } else if (clickedButton.value === "edit") {
-                console.log("Formulario enviado: Editar cliente");
                 this.handleUpdateClient();
             }
         });

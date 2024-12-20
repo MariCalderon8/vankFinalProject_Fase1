@@ -25,7 +25,6 @@ export class LoginController {
         // Maneja el enlace "Regístrate Aquí"
         registerLink.addEventListener('click', (event) => {
             event.preventDefault(); 
-            console.log("Enlace 'Regístrate Aquí' presionado");
             this.app.renderView('register'); // Redirigir a la vista de registro
         });
     }
