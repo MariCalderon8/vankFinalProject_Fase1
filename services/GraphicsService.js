@@ -1,3 +1,4 @@
+//Services/GraphicsService.js
 export class GraphicsService {
 
     #generateData(graphicTitle, labels, data, colors = []) {
@@ -69,6 +70,22 @@ export class GraphicsService {
                 },
             },
         });
+    }
+
+    createLineGraphic(component, graphicTitle, labels, data, colors = []){
+        const generatedData = this.#generateData(graphicTitle, labels, data, colors);
+        return new Chart(component, {
+            type: 'line',
+            data: generatedData,
+            options: {
+              indexAxis: 'y',
+              scales: {
+                x: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
     }
 
 }

@@ -23,8 +23,9 @@ export class BillingController{
         this.initEventListeners();
 
         const issueDataInput = document.getElementById('fecha-emision');
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toLocaleDateString('en-CA');
         issueDataInput.value = today;
+        document.getElementById('fecha-emision').disabled = true;
 
         this.renderTableExistingProducts();
         this.renderTableBillProducts();
@@ -282,6 +283,11 @@ export class BillingController{
             return;
         }
     
+        if (isNaN(expirationDate.getTime())) {
+            alert("La fecha de vencimiento no es válida.");
+            return;
+        }
+
         const client = {
             id: clientId,
             name: clientName,

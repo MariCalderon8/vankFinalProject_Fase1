@@ -2,7 +2,7 @@
 import { App } from "../main.js";
 import { Product } from "../models/Product.js";
 import { AiService } from "../services/AiService.js";
-import { GraphicsService } from "../services/graphicsService.js";
+import { GraphicsService } from "../services/GraphicsService.js";
 import { renderInventory } from "../views/inventory.js";
 import { UserController } from "./usersController.js";
 
@@ -174,6 +174,11 @@ export class InventoryController {
             return;
         }
 
+        if(salePrice < unitPrice){
+            alert('Recuerde que el precio de venta no puede ser menor al precio de unitario');
+            return;
+        }
+
         let user = this.userController.getLoggedUser();
         const productExist = user.getProductById(id);
 
@@ -263,6 +268,11 @@ export class InventoryController {
         const description = document.getElementById('descriptionProduct-formInventory').value;
         const unitPrice = document.getElementById('unitPriceProduct-formInventory').value;
         const salePrice = document.getElementById('salePriceProduct-formInventory').value;
+
+        if(salePrice < unitPrice){
+            alert('Recuerde que el precio de venta no puede ser menor al precio de unitario');
+            return;
+        }
 
         const loggedUser = this.userController.getLoggedUser();
         const product = loggedUser.getProductById(idProduct);

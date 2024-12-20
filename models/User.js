@@ -289,4 +289,49 @@ export class User{
         console.log(`Porcentaje: ${result}`);
         return result;
     }
+
+    //GRAFICOS HOME
+    getTotalSalesByMonth(month){
+        return this.#saleHistory.reduce((total, sale) => {
+            const saleDate = new Date(sale.getIssueDate());
+            if(saleDate.getMonth()+1 === month){
+               sale.getProducts().forEach(detail =>{
+                total += detail.amount ;
+               });
+            }
+            return total;
+        }, 0);
+
+    }
+
+    getDailyProfitsForMonth(month){
+
+        // Calcular días en el mes
+        const daysInMonth = new Date(new Date().getFullYear(), month, 0).getDate();
+        console.log(daysInMonth);
+        const profits = Array(daysInMonth).fill(0);
+
+        this.#saleHistory.forEach(sale => {
+            const saleDate = new Date(sale.getIssueDate());
+            if(saleDate.getMonth()+1 === month){
+                const day = saleDate.getDate();
+                sale.getProducts().forEach(detail =>{
+                    const profit = detail.amount * (detail.product.getSalePrice() - detail.product.getUnitPrice());
+                    profits[day - 1] += profit;
+                });
+            }
+        });
+        return profits;
+    }
+
+    getProductProfits(){
+        const productProfits = {};
+
+        this.#inventory.forEach(product => {
+            const profit = product.getSalePrice() -  product.getUnitPrice();
+            productProfits[product.getId()] = profit;
+        });
+        return productProfits;
+    }
+
 }
