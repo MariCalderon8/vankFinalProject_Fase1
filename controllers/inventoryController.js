@@ -414,8 +414,8 @@ export class InventoryController {
 
         // Datos torta
         const productTotalProfit = user.getProfitPercentByProduct(product.getId());
-        const pieLabels = [`Ganancias del producto (ID:${product.getId()})`, "Ganancia total"]
-        const pieData = [productTotalProfit, (100 - productTotalProfit)]
+        const pieLabels = [`Ganancias del producto (ID:${product.getId()})`, "Otros productos"]
+        const pieData = [productTotalProfit, (100 - productTotalProfit).toFixed(2)]
 
         // Datos diagrama de barra
         const barLabels = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
