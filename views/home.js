@@ -5,7 +5,9 @@ export function renderHome() {
         <section class="home">
             <div class="home-content">
                 <h1>¡Bienvenido a GestionPro!</h1>
-                <p>Gestiona tus ventas, inventarios y usuarios de manera eficiente.</p>
+                <p>Simplifica la gestión de tu negocio, \n
+                Controla tu inventario, \n
+                y aumenta tu productividad en un solo lugar</p>
                 <button class="btn-home btn-primary" data-view="login">Inicia Sesión</button>
             </div>
             <div class="home-image">

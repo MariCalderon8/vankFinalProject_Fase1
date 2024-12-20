@@ -1,121 +1,124 @@
-/* Estilos generales del contenedor principal */
 .home {
-    padding: 20px;
-    background-color: #f4f6f9;
-    font-family: 'Arial', sans-serif;
-    color: #333;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
 }
 
-/* Estilo de bienvenida */
 .home-welcome {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-    justify-items: center;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .home-welcome h1 {
-    font-size: 2rem;
-    color: #0033ff;;
+    margin: 0;
+    font-size: 1.5rem;
+    color: #007BFF;
 }
 
 .home-welcome p {
-    font-size: 1.1rem;
-    color: #616161;
+    margin: 0.5rem 0 0;
+    color: #666;
 }
 
-/* Información de la empresa */
+.dashboard {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
 .home-info {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-    justify-items: center;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .home-info h2 {
-    font-size: 1.8rem;
-    color: #0033ff;
-    margin-bottom: 15px;
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+    color: #007BFF;
 }
 
 .home-info p {
-    font-size: 1rem;
-    color: #616161;
-    margin-bottom: 10px;
+    margin: 0.5rem 0;
+    color: #666;
 }
 
-.home-info strong {
-    color: #0033ff;
-}
-
-/* Contenedor de gráficos */
-.chart-container{
-    display:row-reverse;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-.graphics {
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 30px;
-    display: contents;
-}
-
-
-/* Gráfico de líneas y barras (más pequeños a la izquierda) */
-.graphic-lines, .graphic-bar {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 50%;  /* Tamaño más pequeño */
-}
-
-/* Gráfico de torta (más grande a la derecha) */
-.graphic-pie {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 50%;  /* Tamaño grande */
-}
-
-.graphic-lines canvas, .graphic-bar canvas {
-    width: 50%;
-    height: 50%;
-}
-.graphic-pie canvas{
-    width: 50%;
-    height: 100%;
-}
-
-/* Botones de acción */
-.home-buttons {
+.chart-conteiner {
     display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
 }
 
-.home-buttons button {
-    padding: 10px 20px;
-    background-color: #42A5F5;
+.graphics {
+    display: grid;
+    gap: 1rem;
+    width: 50%;
+}
+
+.graphic-lines, 
+.graphic-bar, 
+.graphic-pie {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.generate-report {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#downloadPdf {
+    padding: 0.75rem 1.5rem;
+    background-color: #007BFF;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    font-size: 1rem;
+    transition: background-color 0.2s;
 }
 
-.home-buttons button:hover {
-    background-color: #1E88E5;
+#downloadPdf:hover {
+    background-color: #007BFF;
 }
 
-.home-buttons button:focus {
-    outline: none;
+.home-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-home {
+    padding: 4rem;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-home:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.graphic-pie {
+    width: 50%;
 }

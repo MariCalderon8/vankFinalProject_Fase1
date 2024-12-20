@@ -1,6 +1,5 @@
 .container-billingForm {
     margin: 0 auto;
-    background: #fff;
     padding: 20px 200px;
     box-shadow: 0px 2px 5px #007BFF;
 }
@@ -18,7 +17,7 @@
 
 .box {
     width: 48%;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     padding: 20px;
     border-radius: 5px;
 }
@@ -65,6 +64,16 @@ select {
     color: #fff;
     position: sticky;
     top: 0;
+}
+
+.btn-AddToBill{
+    background-color: #28a745;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 .btnCreateBill {
@@ -126,10 +135,16 @@ select {
 }
 
 #table-salesHistory button {
-    padding: 5px 10px;
+    padding: 5px;
+    border-radius: 4px;
     border: none;
     cursor: pointer;
-    border-radius: 3px;
+    font-weight: bold;
+}
+
+.cancelBill{
+    background-color: red;
+    font-weight: bold;
 }
 
 .btn-deleteSale:hover {
