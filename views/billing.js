@@ -60,8 +60,11 @@ export function renderBilling() {
                 </div>
 
                 <!-- Botón de generar factura -->
-                <button type="submit" class="btn btnCreateBill">Generar factura</button>
-                <button type="button" class="btn cancelBill">Cancelar</button>
+                <div class="billingForm-actions">
+                    <button type="submit" class="btn btnCreateBill">Generar factura</button>
+                    <button type="button" class="btn cancelBill">Cancelar</button>
+                </div>
+                
             </form>
 
             <h2>Historial de facturación</h2>

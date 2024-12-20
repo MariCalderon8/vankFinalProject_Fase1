@@ -25,6 +25,9 @@ export class PdfService {
             `
         ).join('');
 
+        const issueDate = new Date(sale.getIssueDate());
+        const expirationDate = new Date(sale.getExpirationDate());
+
         const billHtmlContent = `
             <div class="billPdf-container">
             <header class="billPdf-header">
@@ -54,8 +57,8 @@ export class PdfService {
                 <h2 class="section-title">DATOS DE LA FACTURA</h2>
                 <div class="info">
                     <p><strong>Número de factura:</strong> ${sale.getId()}</p>
-                    <p><strong>Fecha de emisión:</strong> ${sale.getIssueDate()}</p>
-                    <p><strong>Fecha de vencimiento:</strong> ${sale.getExpirationDate()}</p>
+                    <p><strong>Fecha de emisión:</strong> ${issueDate.getDate()}/${issueDate.getMonth()+1}/${issueDate.getFullYear()}</p>
+                    <p><strong>Fecha de vencimiento:</strong>  ${expirationDate.getDate()}/${expirationDate.getMonth()+1}/${expirationDate.getFullYear()}</p>
                     <p><strong>Forma de pago:</strong> ${sale.getPaymentMethod()}</p>
                     <p><strong>Medio de pago:</strong> ${sale.getPaymentWay()}</p>
                 </div>

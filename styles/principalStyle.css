@@ -152,6 +152,15 @@ body {
     margin: 0.2rem 0;
 }
 
+.footer-info a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-info a:hover {
+    color: #d4d4d4;
+}
+
 /* Políticas y enlaces */
 .footer-politics {
     flex: 1;

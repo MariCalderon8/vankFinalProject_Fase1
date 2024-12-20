@@ -1,0 +1,161 @@
+/* Estilos generales para el home principal */
+.home-user {
+    padding: 3rem 5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
+}
+
+.home-welcome {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.home-welcome h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #007BFF;
+}
+
+.home-welcome p {
+    margin: 0.5rem 0 0;
+    color: #666;
+}
+
+.home-header {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.home-info {
+    display: flex;
+}
+
+.home-header h2 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+    color: #007BFF;
+}
+
+
+.home-info p {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.company-info,
+.contact-info {
+    flex: 1;
+}
+
+.date {
+    flex: 0.5;
+    text-align: right;
+    font-size: 0.9rem;
+}
+
+.statshome-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.stathome-card {
+    background: #fcfcfc;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.chart-conteiner {
+    display: flex;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+}
+
+.graphic-title {
+    text-align: center;
+    color: rgb(88, 88, 88);
+}
+
+.graphics {
+    display: grid;
+    gap: 1rem;
+    width: 50%;
+}
+
+.graphic-lines, 
+.graphic-bar, 
+.graphic-pie {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.graphic-pie {
+    padding: 4rem;
+    width: 50%;
+}
+
+.generate-report {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#downloadPdf {
+    padding: 0.75rem 1.5rem;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+#downloadPdf:hover {
+    background-color: #114377;
+}
+
+.home-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-actions {
+    padding: 4rem;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-actions:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.chart-conteiner canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+

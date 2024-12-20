@@ -242,6 +242,32 @@ export class User {
         return result
     }
 
+    getMonthSales(){
+        const actualDate = new Date();
+        return this.#saleHistory.reduce((total, sale) => {
+            const issueDate = new Date(sale.getIssueDate());
+            if(issueDate.getMonth() == actualDate.getMonth() && issueDate.getFullYear() == actualDate.getFullYear()){
+                sale.getProducts().forEach(detail => {
+                    total += (detail.amount * detail.product.getSalePrice());
+                });
+            }
+            return total;
+        }, 0);
+    }
+
+    getMonthUnitsSold(){
+        const actualDate = new Date();
+        return this.#saleHistory.reduce((total, sale) => {
+            const issueDate = new Date(sale.getIssueDate());
+            if(issueDate.getMonth() == actualDate.getMonth() && issueDate.getFullYear() == actualDate.getFullYear()){
+                sale.getProducts().forEach(detail => {
+                    total += detail.amount;
+                });
+            }
+            return total;
+        }, 0);
+    }
+
 
     // By product
 
@@ -261,7 +287,8 @@ export class User {
             sale.getProducts().forEach(detail => {
                 if (detail.product.getId() == idProduct) {
                     total += (detail.amount * detail.product.getSalePrice());
-
+                    console.log('Dentro de user ventas');
+                    console.log(total);
                 }
                 console.log(total);
             });
@@ -309,12 +336,13 @@ export class User {
     }
 
     getProductTotalSalesByMonth(month, idProduct) {
+        const currentDate = new Date();
         return this.#saleHistory.reduce((total, sale) => {
             const saleDate = new Date(sale.getIssueDate());
-            if (saleDate.getMonth() === month) {
+            if (saleDate.getMonth() === month && saleDate.getFullYear() == currentDate.getFullYear()) {
                 sale.getProducts().forEach(detail => {
                     if(detail.product.getId() == idProduct){
-                        total += detail.amount ;
+                        total += (detail.amount * detail.product.getSalePrice());
                     }
                 });
             }
@@ -325,9 +353,10 @@ export class User {
 
     //GRAFICOS HOME
     getTotalSalesByMonth(month) {
+        const currentDate = new Date();
         return this.#saleHistory.reduce((total, sale) => {
             const saleDate = new Date(sale.getIssueDate());
-            if (saleDate.getMonth() + 1 === month) {
+            if (saleDate.getMonth() + 1 === month && saleDate.getFullYear() == currentDate.getFullYear()) {
                 sale.getProducts().forEach(detail => {
                     total += detail.amount;
                 });
@@ -343,10 +372,10 @@ export class User {
         const daysInMonth = new Date(new Date().getFullYear(), month, 0).getDate();
         console.log(daysInMonth);
         const profits = Array(daysInMonth).fill(0);
-
+        const currentDate = new Date();
         this.#saleHistory.forEach(sale => {
             const saleDate = new Date(sale.getIssueDate());
-            if (saleDate.getMonth() + 1 === month) {
+            if (saleDate.getMonth() + 1 === month && saleDate.getFullYear() == currentDate.getFullYear()) {
                 const day = saleDate.getDate();
                 sale.getProducts().forEach(detail => {
                     const profit = detail.amount * (detail.product.getSalePrice() - detail.product.getUnitPrice());

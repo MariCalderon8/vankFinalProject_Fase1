@@ -269,7 +269,7 @@ export class InventoryController {
         const unitPrice = document.getElementById('unitPriceProduct-formInventory').value;
         const salePrice = document.getElementById('salePriceProduct-formInventory').value;
 
-        if(salePrice <= unitPrice){
+        if(parseFloat(salePrice) <= parseFloat(unitPrice)){
             alert('Recuerde que el precio de venta no puede ser menor o igual al precio de unitario');
             return;
         }
