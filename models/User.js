@@ -376,12 +376,10 @@ export class User {
     getProductProfits() {
         const productProfits = {};
         const totalProfit = this.getTotalProfit();
-        console.log(totalProfit);
         if (totalProfit === 0) return {};
     
         this.#inventory.forEach(product => {
             productProfits[product.getId()] = this.getProfitPercentByProduct(product.getId())
-            console.log(this.getProfitPercentByProduct(product.getId()));
         });
     
         return productProfits;
