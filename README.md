@@ -4,6 +4,11 @@ GestionPro es una aplicación web diseñada para atender las necesidades de pequ
 
 Puedes acceder a la aplicación aquí: [GestionPro en Netlify](https://gestionpro-vankvproject.netlify.app/)
 
+### Documentación
+
+- Requerimientos: [Documentación GestiónPro](https://drive.google.com/file/d/1h4hQgNVQhTM_xxXfrPLG6G4yP2qkBGiW/view?usp=sharing)
+- Figma: [Mockups interactivos con Figma](https://www.figma.com/proto/sMSNtOkhzThc7nqIeboO1z/Untitled?node-id=12-61&p=f&t=aESbmklYo6w1LRTm-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1)
+
 ---
 
 ## Tabla de Contenidos
