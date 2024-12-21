@@ -81,7 +81,7 @@ export class BillingController{
                     <td>$${saleDetail.product.getSalePrice()}</td>
                     <td><input class="productAmount" type="number" value="${saleDetail.amount || 1}" min="1" ></input></td>
                     <td>
-                    <button type="button" class="btn-deleteFromBill" data-id="${saleDetail.product.getId()}">Borrar</button>
+                    <button type="button" class="btn-deleteFromBill" data-id="${saleDetail.product.getId()}">Eliminar</button>
                     </td>
             </tr>
             `
